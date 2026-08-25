@@ -23,7 +23,10 @@ DATABASE_URL = os.environ.get("DATABASE_URL")
 
 def get_db_connection():
     if not DATABASE_URL:
-        raise RuntimeError("DATABASE_URL environment variable is not set.")
+        raise RuntimeError(
+            "DATABASE_URL environment variable is not configured."
+        )
+
     return psycopg2.connect(DATABASE_URL)
 
 
@@ -81,25 +84,6 @@ def create_tables():
         )
     """)
 
-    # -----------------------------------------------------
-    # ADD MISSING ATTENDANCE COLUMNS
-    # -----------------------------------------------------
-
-    cur.execute("""
-        ALTER TABLE attendance
-        ADD COLUMN IF NOT EXISTS check_in TEXT
-    """)
-
-    cur.execute("""
-        ALTER TABLE attendance
-        ADD COLUMN IF NOT EXISTS check_out TEXT
-    """)
-
-    cur.execute("""
-        ALTER TABLE attendance
-        ADD COLUMN IF NOT EXISTS attendance_type TEXT
-    """)
-
     conn.commit()
 
     cur.close()
@@ -111,7 +95,7 @@ create_tables()
 
 
 # =========================================================
-# HELPER FUNCTION
+# HELPER
 # CALCULATE WORKING HOURS
 # =========================================================
 
@@ -302,10 +286,7 @@ def employee_dashboard():
     employee_id = session.get("employee")
 
     if not employee_id:
-
-        return redirect(
-            "/employee_login"
-        )
+        return redirect("/employee_login")
 
     total_days = 0
     present = 0
@@ -606,10 +587,7 @@ def employee_check_in():
     employee_id = session.get("employee")
 
     if not employee_id:
-
-        return redirect(
-            "/employee_login"
-        )
+        return redirect("/employee_login")
 
     attendance_type = request.form.get(
         "attendance_type",
@@ -723,10 +701,7 @@ def employee_check_out():
     employee_id = session.get("employee")
 
     if not employee_id:
-
-        return redirect(
-            "/employee_login"
-        )
+        return redirect("/employee_login")
 
     today = datetime.now().strftime(
         "%Y-%m-%d"
@@ -812,10 +787,7 @@ def apply_leave():
     employee_id = session.get("employee")
 
     if not employee_id:
-
-        return redirect(
-            "/employee_login"
-        )
+        return redirect("/employee_login")
 
     if request.method == "POST":
 
@@ -874,7 +846,6 @@ def apply_leave():
 def dashboard():
 
     if not session.get("admin"):
-
         return redirect("/login")
 
     conn = get_db_connection()
@@ -930,7 +901,6 @@ def dashboard():
 def leave_requests():
 
     if not session.get("admin"):
-
         return redirect("/login")
 
     conn = get_db_connection()
@@ -975,7 +945,6 @@ def leave_requests():
 def approve_leave(id):
 
     if not session.get("admin"):
-
         return redirect("/login")
 
     conn = get_db_connection()
@@ -1010,7 +979,6 @@ def approve_leave(id):
 def reject_leave(id):
 
     if not session.get("admin"):
-
         return redirect("/login")
 
     conn = get_db_connection()
@@ -1045,7 +1013,6 @@ def reject_leave(id):
 def add_employee():
 
     if not session.get("admin"):
-
         return redirect("/login")
 
     if request.method == "POST":
@@ -1141,7 +1108,6 @@ def add_employee():
 def view_employees():
 
     if not session.get("admin"):
-
         return redirect("/login")
 
     conn = get_db_connection()
@@ -1181,7 +1147,6 @@ def view_employees():
 def edit_employee(id):
 
     if not session.get("admin"):
-
         return redirect("/login")
 
     conn = get_db_connection()
@@ -1277,7 +1242,6 @@ def edit_employee(id):
     conn.close()
 
     if not employee:
-
         return "Employee not found."
 
     return render_template(
@@ -1297,7 +1261,6 @@ def edit_employee(id):
 def mark_attendance():
 
     if not session.get("admin"):
-
         return redirect("/login")
 
     conn = get_db_connection()
@@ -1417,7 +1380,6 @@ def mark_attendance():
 def attendance_report():
 
     if not session.get("admin"):
-
         return redirect("/login")
 
     conn = get_db_connection()
@@ -1480,7 +1442,6 @@ def attendance_report():
 def edit_attendance(id):
 
     if not session.get("admin"):
-
         return redirect("/login")
 
     conn = get_db_connection()
@@ -1570,7 +1531,7 @@ def edit_attendance(id):
     attendance = cur.fetchone()
 
     # -----------------------------------------------------
-    # GET EMPLOYEES
+    # GET EMPLOYEES FOR DROPDOWN
     # -----------------------------------------------------
 
     cur.execute("""
@@ -1587,7 +1548,6 @@ def edit_attendance(id):
     conn.close()
 
     if not attendance:
-
         return "Attendance record not found."
 
     return render_template(
@@ -1605,7 +1565,6 @@ def edit_attendance(id):
 def monthly_attendance_report():
 
     if not session.get("admin"):
-
         return redirect("/login")
 
     selected_month = request.args.get(
@@ -1651,7 +1610,11 @@ def monthly_attendance_report():
         ON employee.employee_id =
            attendance.employee_id
 
-        AND LEFT(attendance.date, 7) = %s
+        AND SUBSTRING(
+            attendance.date,
+            1,
+            7
+        ) = %s
 
         GROUP BY
             employee.employee_id,
@@ -1723,7 +1686,11 @@ def monthly_attendance_report():
         ON attendance.employee_id =
            employee.employee_id
 
-        WHERE LEFT(attendance.date, 7) = %s
+        WHERE SUBSTRING(
+            attendance.date,
+            1,
+            7
+        ) = %s
 
         ORDER BY
             attendance.date DESC,
@@ -1757,7 +1724,6 @@ def monthly_attendance_report():
 def search_employee():
 
     if not session.get("admin"):
-
         return redirect("/login")
 
     employees = []
@@ -1806,7 +1772,6 @@ def search_employee():
 def delete_employee(id):
 
     if not session.get("admin"):
-
         return redirect("/login")
 
     conn = get_db_connection()
@@ -1897,13 +1862,15 @@ def logout():
 
 if __name__ == "__main__":
 
+    port = int(
+        os.environ.get(
+            "PORT",
+            5000
+        )
+    )
+
     app.run(
         host="0.0.0.0",
-        port=int(
-            os.environ.get(
-                "PORT",
-                5000
-            )
-        ),
+        port=port,
         debug=False
     )
