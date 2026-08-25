@@ -1,0 +1,614 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Leave Requests - EAMS</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            margin: 0;
+
+            padding: 25px;
+
+            font-family: Arial, sans-serif;
+
+            background: #eef8f7;
+
+            color: #263238;
+        }
+
+
+        .container {
+
+            max-width: 1200px;
+
+            margin: auto;
+        }
+
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .header {
+
+            background: white;
+
+            padding: 25px;
+
+            border-radius: 15px;
+
+            box-shadow:
+                0 5px 18px rgba(0, 0, 0, 0.08);
+
+            margin-bottom: 20px;
+        }
+
+
+        .header h1 {
+
+            margin: 0;
+
+            color: #0f766e;
+
+            font-size: 27px;
+        }
+
+
+        .header p {
+
+            margin: 7px 0 0;
+
+            color: #607d8b;
+
+            font-size: 14px;
+        }
+
+
+        /* =========================
+           BACK BUTTON
+        ========================= */
+
+        .back-btn {
+
+            display: inline-block;
+
+            margin-bottom: 20px;
+
+            padding: 10px 16px;
+
+            background: #e2e8f0;
+
+            color: #475569;
+
+            text-decoration: none;
+
+            border-radius: 8px;
+
+            font-weight: bold;
+
+            font-size: 14px;
+        }
+
+
+        .back-btn:hover {
+
+            background: #cbd5e1;
+
+            color: #0f766e;
+        }
+
+
+        /* =========================
+           TABLE SECTION
+        ========================= */
+
+        .section {
+
+            background: white;
+
+            padding: 22px;
+
+            border-radius: 15px;
+
+            box-shadow:
+                0 5px 18px rgba(0, 0, 0, 0.08);
+
+            overflow: hidden;
+        }
+
+
+        .section h2 {
+
+            margin-top: 0;
+
+            color: #0f766e;
+
+            font-size: 21px;
+        }
+
+
+        .table-container {
+
+            width: 100%;
+
+            overflow-x: auto;
+        }
+
+
+        table {
+
+            width: 100%;
+
+            border-collapse: collapse;
+
+            min-width: 850px;
+        }
+
+
+        th {
+
+            background: #0f766e;
+
+            color: white;
+
+            padding: 13px;
+
+            text-align: left;
+
+            font-size: 14px;
+        }
+
+
+        td {
+
+            padding: 13px;
+
+            border-bottom: 1px solid #e2e8f0;
+
+            font-size: 14px;
+
+            vertical-align: middle;
+        }
+
+
+        tr:hover {
+
+            background: #f0fdfa;
+        }
+
+
+        /* =========================
+           STATUS
+        ========================= */
+
+        .status {
+
+            padding: 6px 10px;
+
+            border-radius: 20px;
+
+            font-weight: bold;
+
+            font-size: 12px;
+
+            display: inline-block;
+        }
+
+
+        .pending {
+
+            background: #fef3c7;
+
+            color: #92400e;
+        }
+
+
+        .approved {
+
+            background: #dcfce7;
+
+            color: #166534;
+        }
+
+
+        .rejected {
+
+            background: #fee2e2;
+
+            color: #991b1b;
+        }
+
+
+        /* =========================
+           ACTION BUTTONS
+        ========================= */
+
+        .action-form {
+
+            display: inline-block;
+
+            margin-right: 5px;
+        }
+
+
+        .approve-btn {
+
+            padding: 8px 12px;
+
+            background: #16a34a;
+
+            color: white;
+
+            border: none;
+
+            border-radius: 7px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+
+        .approve-btn:hover {
+
+            background: #15803d;
+        }
+
+
+        .reject-btn {
+
+            padding: 8px 12px;
+
+            background: #dc2626;
+
+            color: white;
+
+            border: none;
+
+            border-radius: 7px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+
+        .reject-btn:hover {
+
+            background: #b91c1c;
+        }
+
+
+        .no-record {
+
+            color: #64748b;
+
+            font-style: italic;
+
+            text-align: center;
+        }
+
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        .footer {
+
+            text-align: center;
+
+            color: #78909c;
+
+            font-size: 13px;
+
+            margin-top: 25px;
+
+            padding-bottom: 10px;
+        }
+
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 650px) {
+
+            body {
+
+                padding: 15px;
+            }
+
+
+            .header {
+
+                padding: 20px;
+            }
+
+
+            .section {
+
+                padding: 17px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <!-- =========================
+         HEADER
+    ========================= -->
+
+    <div class="header">
+
+        <h1>
+            📝 Leave Requests
+        </h1>
+
+        <p>
+            Review and manage employee leave applications.
+        </p>
+
+    </div>
+
+
+    <!-- =========================
+         BACK
+    ========================= -->
+
+    <a
+        href="/dashboard"
+        class="back-btn"
+    >
+        ← Back to Dashboard
+    </a>
+
+
+    <!-- =========================
+         LEAVE TABLE
+    ========================= -->
+
+    <div class="section">
+
+        <h2>
+            📋 Employee Leave Applications
+        </h2>
+
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            ID
+                        </th>
+
+                        <th>
+                            Employee ID
+                        </th>
+
+                        <th>
+                            Employee Name
+                        </th>
+
+                        <th>
+                            Leave Date
+                        </th>
+
+                        <th>
+                            Reason
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                        <th>
+                            Action
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+
+                {% for leave in requests %}
+
+                <tr>
+
+
+                    <td>
+                        {{ leave[0] }}
+                    </td>
+
+
+                    <td>
+                        {{ leave[1] }}
+                    </td>
+
+
+                    <td>
+                        {{ leave[2] or "-" }}
+                    </td>
+
+
+                    <td>
+                        {{ leave[3] }}
+                    </td>
+
+
+                    <td>
+                        {{ leave[4] or "-" }}
+                    </td>
+
+
+                    <!-- STATUS -->
+
+                    <td>
+
+                        {% if leave[5] == "Pending" %}
+
+                            <span class="status pending">
+                                🟡 Pending
+                            </span>
+
+                        {% elif leave[5] == "Approved" %}
+
+                            <span class="status approved">
+                                🟢 Approved
+                            </span>
+
+                        {% else %}
+
+                            <span class="status rejected">
+                                🔴 Rejected
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <!-- ACTION -->
+
+                    <td>
+
+
+                        {% if leave[5] == "Pending" %}
+
+
+                            <form
+                                method="POST"
+                                action="/approve_leave/{{ leave[0] }}"
+                                class="action-form"
+                            >
+
+                                <button
+                                    type="submit"
+                                    class="approve-btn"
+                                >
+                                    ✓ Approve
+                                </button>
+
+                            </form>
+
+
+                            <form
+                                method="POST"
+                                action="/reject_leave/{{ leave[0] }}"
+                                class="action-form"
+                            >
+
+                                <button
+                                    type="submit"
+                                    class="reject-btn"
+                                >
+                                    ✕ Reject
+                                </button>
+
+                            </form>
+
+
+                        {% elif leave[5] == "Approved" %}
+
+                            <span class="status approved">
+                                Already Approved
+                            </span>
+
+
+                        {% else %}
+
+                            <span class="status rejected">
+                                Already Rejected
+                            </span>
+
+                        {% endif %}
+
+
+                    </td>
+
+
+                </tr>
+
+
+                {% else %}
+
+                <tr>
+
+                    <td
+                        colspan="7"
+                        class="no-record"
+                    >
+
+                        No leave requests found.
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         FOOTER
+    ========================= -->
+
+    <div class="footer">
+
+        Employee Attendance Management System
+        <br>
+
+        Admin Panel • Leave Management
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>
+```

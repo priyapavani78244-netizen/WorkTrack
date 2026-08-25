@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Employee List - WorkTrack</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #F1F7F6;
+            color: #123333;
+        }
+
+        /* ================================
+           HEADER
+        ================================= */
+
+        .top-header {
+            background: #073F3F;
+            color: white;
+            padding: 18px 35px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .logo span {
+            display: block;
+            font-size: 10px;
+            font-weight: normal;
+            opacity: 0.8;
+            letter-spacing: 0;
+            margin-top: 3px;
+        }
+
+        .header-title {
+            font-size: 14px;
+        }
+
+        /* ================================
+           MAIN CONTAINER
+        ================================= */
+
+        .container {
+            width: 94%;
+            max-width: 1200px;
+            margin: 30px auto;
+        }
+
+        /* ================================
+           PAGE HEADER
+        ================================= */
+
+        .page-header {
+            background: white;
+            padding: 22px 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 5px solid #087F7B;
+            box-shadow: 0 4px 15px rgba(7, 63, 63, 0.08);
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .page-header h1 {
+            margin: 0 0 7px;
+            color: #073F3F;
+            font-size: 25px;
+        }
+
+        .page-header p {
+            margin: 0;
+            color: #6B7F7F;
+            font-size: 14px;
+        }
+
+        /* ================================
+           ADD EMPLOYEE BUTTON
+        ================================= */
+
+        .add-btn {
+            text-decoration: none;
+            background: #087F7B;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: bold;
+            white-space: nowrap;
+            transition: 0.2s;
+        }
+
+        .add-btn:hover {
+            background: #066B68;
+            transform: translateY(-1px);
+        }
+
+        /* ================================
+           TABLE CARD
+        ================================= */
+
+        .table-card {
+            background: white;
+            border-radius: 14px;
+            padding: 22px;
+            border: 1px solid #D8E8E7;
+            box-shadow: 0 5px 18px rgba(7, 63, 63, 0.08);
+        }
+
+        /* ================================
+           TABLE TOP
+        ================================= */
+
+        .table-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .table-top h2 {
+            margin: 0;
+            color: #073F3F;
+            font-size: 18px;
+        }
+
+        .employee-count {
+            background: #E8F5F4;
+            color: #087F7B;
+            padding: 7px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* ================================
+           TABLE
+        ================================= */
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 850px;
+        }
+
+        th {
+            background: #073F3F;
+            color: white;
+            padding: 14px 12px;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        th:first-child {
+            border-radius: 7px 0 0 7px;
+        }
+
+        th:last-child {
+            border-radius: 0 7px 7px 0;
+        }
+
+        td {
+            padding: 13px 12px;
+            border-bottom: 1px solid #E1ECEB;
+            font-size: 13px;
+            color: #365555;
+        }
+
+        tbody tr {
+            transition: 0.15s;
+        }
+
+        tbody tr:hover {
+            background: #F0F9F8;
+        }
+
+        /* ================================
+           EMPLOYEE ID
+        ================================= */
+
+        .employee-id {
+            display: inline-block;
+            background: #E8F5F4;
+            color: #087F7B;
+            padding: 6px 9px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        /* ================================
+           EMPLOYEE NAME
+        ================================= */
+
+        .employee-name {
+            color: #073F3F;
+            font-weight: bold;
+        }
+
+        /* ================================
+           DEPARTMENT
+        ================================= */
+
+        .department {
+            display: inline-block;
+            background: #F1F7F6;
+            border: 1px solid #D4E7E5;
+            color: #496565;
+            padding: 5px 9px;
+            border-radius: 6px;
+            font-size: 12px;
+        }
+
+        /* ================================
+           ACTION BUTTONS
+        ================================= */
+
+        .actions {
+            display: flex;
+            gap: 7px;
+            flex-wrap: wrap;
+        }
+
+        .edit-btn,
+        .delete-btn {
+            text-decoration: none;
+            padding: 7px 11px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .edit-btn {
+            background: #E8F5F4;
+            color: #087F7B;
+            border: 1px solid #B7DCDA;
+        }
+
+        .edit-btn:hover {
+            background: #D5ECEA;
+            color: #073F3F;
+        }
+
+        .delete-btn {
+            background: #FDECEC;
+            color: #C0392B;
+            border: 1px solid #F2C5C1;
+        }
+
+        .delete-btn:hover {
+            background: #F8DADA;
+        }
+
+        /* ================================
+           EMPTY MESSAGE
+        ================================= */
+
+        .empty-box {
+            text-align: center;
+            padding: 45px 20px;
+            color: #718585;
+        }
+
+        .empty-icon {
+            font-size: 42px;
+            margin-bottom: 12px;
+        }
+
+        .empty-box h3 {
+            margin: 0 0 7px;
+            color: #073F3F;
+        }
+
+        .empty-box p {
+            margin: 0 0 18px;
+            font-size: 13px;
+        }
+
+        /* ================================
+           BOTTOM BUTTONS
+        ================================= */
+
+        .bottom-actions {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .back-btn {
+            text-decoration: none;
+            background: #E8F5F4;
+            color: #087F7B;
+            border: 1px solid #B7DCDA;
+            padding: 11px 17px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .back-btn:hover {
+            background: #D8EEEC;
+            color: #073F3F;
+        }
+
+        /* ================================
+           FOOTER
+        ================================= */
+
+        .footer {
+            text-align: center;
+            color: #789090;
+            font-size: 12px;
+            margin: 30px 0 20px;
+            line-height: 1.6;
+        }
+
+        /* ================================
+           MOBILE
+        ================================= */
+
+        @media (max-width: 650px) {
+
+            .top-header {
+                padding: 15px 20px;
+            }
+
+            .header-title {
+                display: none;
+            }
+
+            .container {
+                width: 94%;
+                margin: 20px auto;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .add-btn {
+                width: 100%;
+                text-align: center;
+            }
+
+            .table-card {
+                padding: 15px;
+            }
+
+            .table-top {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+
+    <div class="top-header">
+
+        <div class="logo">
+            WorkTrack
+
+            <span>
+                Employee Management & Attendance System
+            </span>
+        </div>
+
+        <div class="header-title">
+            👤 Admin Panel
+        </div>
+
+    </div>
+
+
+    <!-- MAIN CONTAINER -->
+
+    <div class="container">
+
+
+        <!-- PAGE HEADER -->
+
+        <div class="page-header">
+
+            <div>
+
+                <h1>
+                    👥 Employee List
+                </h1>
+
+                <p>
+                    View, edit and manage employee records.
+                </p>
+
+            </div>
+
+
+            <a
+                href="/add_employee"
+                class="add-btn"
+            >
+                ➕ Add Employee
+            </a>
+
+        </div>
+
+
+        <!-- TABLE CARD -->
+
+        <div class="table-card">
+
+
+            <div class="table-top">
+
+                <h2>
+                    📋 All Employees
+                </h2>
+
+                <div class="employee-count">
+
+                    {{ employees|length }}
+
+                    Employee(s)
+
+                </div>
+
+            </div>
+
+
+            {% if employees %}
+
+
+            <!-- TABLE -->
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>ID</th>
+
+                            <th>Employee ID</th>
+
+                            <th>Employee Name</th>
+
+                            <th>Email</th>
+
+                            <th>Department</th>
+
+                            <th>Mobile</th>
+
+                            <th>Actions</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for employee in employees %}
+
+                        <tr>
+
+                            <!-- DATABASE ID -->
+
+                            <td>
+                                {{ employee[0] }}
+                            </td>
+
+
+                            <!-- EMPLOYEE ID -->
+
+                            <td>
+
+                                <span class="employee-id">
+                                    {{ employee[1] }}
+                                </span>
+
+                            </td>
+
+
+                            <!-- NAME -->
+
+                            <td>
+
+                                <span class="employee-name">
+                                    {{ employee[2] }}
+                                </span>
+
+                            </td>
+
+
+                            <!-- EMAIL -->
+
+                            <td>
+
+                                {% if employee[3] %}
+                                    {{ employee[3] }}
+                                {% else %}
+                                    -
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- DEPARTMENT -->
+
+                            <td>
+
+                                {% if employee[4] %}
+
+                                    <span class="department">
+                                        {{ employee[4] }}
+                                    </span>
+
+                                {% else %}
+
+                                    -
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- MOBILE -->
+
+                            <td>
+
+                                {% if employee[5] %}
+                                    {{ employee[5] }}
+                                {% else %}
+                                    -
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- ACTIONS -->
+
+                            <td>
+
+                                <div class="actions">
+
+                                    <a
+                                        href="/edit_employee/{{ employee[0] }}"
+                                        class="edit-btn"
+                                    >
+                                        ✏️ Edit
+                                    </a>
+
+
+                                    <a
+                                        href="/delete_employee/{{ employee[0] }}"
+                                        class="delete-btn"
+                                        onclick="return confirm('Are you sure you want to delete this employee?');"
+                                    >
+                                        🗑️ Delete
+                                    </a>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            {% else %}
+
+
+            <!-- EMPTY -->
+
+            <div class="empty-box">
+
+                <div class="empty-icon">
+                    👥
+                </div>
+
+                <h3>
+                    No Employees Found
+                </h3>
+
+                <p>
+                    There are currently no employees in the system.
+                </p>
+
+                <a
+                    href="/add_employee"
+                    class="add-btn"
+                >
+                    ➕ Add First Employee
+                </a>
+
+            </div>
+
+
+            {% endif %}
+
+
+        </div>
+
+
+        <!-- BOTTOM -->
+
+        <div class="bottom-actions">
+
+            <a
+                href="/dashboard"
+                class="back-btn"
+            >
+                ← Back to Dashboard
+            </a>
+
+        </div>
+
+
+        <!-- FOOTER -->
+
+        <div class="footer">
+
+            WorkTrack
+
+            <br>
+
+            Admin Panel · BCA Project
+
+        </div>
+
+
+    </div>
+
+</body>
+
+</html>

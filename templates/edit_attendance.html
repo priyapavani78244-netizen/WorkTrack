@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Attendance - WorkTrack</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #F1F7F6;
+            color: #123333;
+        }
+
+        /* =========================================
+           HEADER
+        ========================================= */
+
+        .top-header {
+            background: #073F3F;
+            color: white;
+            padding: 18px 35px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            box-shadow:
+                0 3px 10px rgba(0, 0, 0, 0.12);
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .logo span {
+            display: block;
+            font-size: 10px;
+            font-weight: normal;
+            opacity: 0.8;
+            letter-spacing: 0;
+            margin-top: 3px;
+        }
+
+        .header-title {
+            font-size: 14px;
+        }
+
+
+        /* =========================================
+           CONTAINER
+        ========================================= */
+
+        .container {
+            width: 96%;
+            max-width: 900px;
+            margin: 35px auto;
+        }
+
+
+        /* =========================================
+           CARD
+        ========================================= */
+
+        .card {
+            background: white;
+
+            border-radius: 14px;
+
+            padding: 30px;
+
+            border: 1px solid #D8E8E7;
+
+            box-shadow:
+                0 5px 18px rgba(7, 63, 63, 0.08);
+        }
+
+
+        /* =========================================
+           TITLE
+        ========================================= */
+
+        .card-header {
+            border-left: 5px solid #087F7B;
+
+            padding-left: 15px;
+
+            margin-bottom: 28px;
+        }
+
+        .card-header h1 {
+            margin: 0 0 7px;
+
+            color: #073F3F;
+
+            font-size: 25px;
+        }
+
+        .card-header p {
+            margin: 0;
+
+            color: #718585;
+
+            font-size: 13px;
+        }
+
+
+        /* =========================================
+           FORM
+        ========================================= */
+
+        .form-grid {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+
+            flex-direction: column;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-size: 12px;
+
+            font-weight: bold;
+
+            color: #073F3F;
+
+            margin-bottom: 7px;
+        }
+
+        input,
+        select {
+            width: 100%;
+
+            padding: 11px 12px;
+
+            border: 1px solid #C9DDDB;
+
+            border-radius: 7px;
+
+            font-size: 13px;
+
+            color: #123333;
+
+            background: #FFFFFF;
+
+            outline: none;
+
+            transition: 0.2s;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #087F7B;
+
+            box-shadow:
+                0 0 0 3px rgba(8, 127, 123, 0.10);
+        }
+
+        input[readonly] {
+            background: #F3F8F7;
+
+            color: #607575;
+
+            cursor: not-allowed;
+        }
+
+
+        /* =========================================
+           INFORMATION BOX
+        ========================================= */
+
+        .info-box {
+            margin-top: 22px;
+
+            padding: 14px 16px;
+
+            background: #E8F5F4;
+
+            border: 1px solid #B7DCDA;
+
+            border-radius: 8px;
+
+            color: #087F7B;
+
+            font-size: 12px;
+
+            line-height: 1.6;
+        }
+
+        .info-box strong {
+            color: #073F3F;
+        }
+
+
+        /* =========================================
+           BUTTONS
+        ========================================= */
+
+        .buttons {
+            margin-top: 28px;
+
+            display: flex;
+
+            gap: 12px;
+
+            flex-wrap: wrap;
+        }
+
+        .save-btn {
+            border: none;
+
+            background: #087F7B;
+
+            color: white;
+
+            padding: 11px 20px;
+
+            border-radius: 7px;
+
+            font-size: 12px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        .save-btn:hover {
+            background: #066B68;
+
+            transform: translateY(-1px);
+        }
+
+        .cancel-btn {
+            display: inline-block;
+
+            text-decoration: none;
+
+            background: #E8F5F4;
+
+            color: #087F7B;
+
+            border: 1px solid #B7DCDA;
+
+            padding: 11px 20px;
+
+            border-radius: 7px;
+
+            font-size: 12px;
+
+            font-weight: bold;
+
+            transition: 0.2s;
+        }
+
+        .cancel-btn:hover {
+            background: #D8EEEC;
+        }
+
+
+        /* =========================================
+           FOOTER
+        ========================================= */
+
+        .footer {
+            text-align: center;
+
+            color: #789090;
+
+            font-size: 12px;
+
+            margin: 25px 0;
+        }
+
+
+        /* =========================================
+           MOBILE
+        ========================================= */
+
+        @media (max-width: 700px) {
+
+            .top-header {
+                padding: 15px 20px;
+            }
+
+            .header-title {
+                display: none;
+            }
+
+            .container {
+                width: 94%;
+
+                margin: 20px auto;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .card-header h1 {
+                font-size: 21px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: auto;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            .save-btn,
+            .cancel-btn {
+                width: 100%;
+
+                text-align: center;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================================
+         HEADER
+    ========================================= -->
+
+    <div class="top-header">
+
+        <div class="logo">
+
+            WorkTrack
+
+            <span>
+                Employee Management & Attendance System
+            </span>
+
+        </div>
+
+
+        <div class="header-title">
+
+            ✏️ Edit Attendance
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =========================================
+         MAIN CONTAINER
+    ========================================= -->
+
+    <div class="container">
+
+
+        <div class="card">
+
+
+            <!-- =====================================
+                 TITLE
+            ====================================== -->
+
+            <div class="card-header">
+
+                <h1>
+                    ✏️ Edit Attendance
+                </h1>
+
+                <p>
+                    Update employee attendance information.
+                </p>
+
+            </div>
+
+
+
+            <!-- =====================================
+                 FORM
+            ====================================== -->
+
+            <form
+                method="POST"
+                action="{{ url_for('edit_attendance', id=attendance[0]) }}"
+            >
+
+
+                <div class="form-grid">
+
+
+                    <!-- EMPLOYEE ID -->
+
+                    <div class="form-group">
+
+                        <label for="employee_id">
+                            Employee ID
+                        </label>
+
+                        <input
+                            type="text"
+                            id="employee_id"
+                            name="employee_id"
+                            value="{{ attendance[1] }}"
+                            readonly
+                        >
+
+                    </div>
+
+
+
+                    <!-- DATE -->
+
+                    <div class="form-group">
+
+                        <label for="date">
+                            Attendance Date
+                        </label>
+
+                        <input
+                            type="date"
+                            id="date"
+                            name="date"
+                            value="{{ attendance[2] }}"
+                            required
+                        >
+
+                    </div>
+
+
+
+                    <!-- STATUS -->
+
+                    <div class="form-group">
+
+                        <label for="status">
+                            Status
+                        </label>
+
+                        <select
+                            id="status"
+                            name="status"
+                            required
+                        >
+
+                            <option
+                                value="Present"
+                                {% if attendance[3] == "Present" %}
+                                selected
+                                {% endif %}
+                            >
+                                Present
+                            </option>
+
+                            <option
+                                value="Absent"
+                                {% if attendance[3] == "Absent" %}
+                                selected
+                                {% endif %}
+                            >
+                                Absent
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+
+                    <!-- ATTENDANCE TYPE -->
+
+                    <div class="form-group">
+
+                        <label for="attendance_type">
+                            Attendance Type
+                        </label>
+
+                        <select
+                            id="attendance_type"
+                            name="attendance_type"
+                        >
+
+                            <option
+                                value=""
+                                {% if not attendance[6] %}
+                                selected
+                                {% endif %}
+                            >
+                                Select Type
+                            </option>
+
+                            <option
+                                value="Full Day"
+                                {% if attendance[6] == "Full Day" %}
+                                selected
+                                {% endif %}
+                            >
+                                Full Day
+                            </option>
+
+                            <option
+                                value="First Half"
+                                {% if attendance[6] == "First Half" %}
+                                selected
+                                {% endif %}
+                            >
+                                First Half
+                            </option>
+
+                            <option
+                                value="Second Half"
+                                {% if attendance[6] == "Second Half" %}
+                                selected
+                                {% endif %}
+                            >
+                                Second Half
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+
+                    <!-- CHECK IN -->
+
+                    <div class="form-group">
+
+                        <label for="check_in">
+                            Check-In Time
+                        </label>
+
+                        <input
+                            type="text"
+                            id="check_in"
+                            name="check_in"
+                            placeholder="Example: 09:30 AM"
+                            value="{{ attendance[4] or '' }}"
+                        >
+
+                    </div>
+
+
+
+                    <!-- CHECK OUT -->
+
+                    <div class="form-group">
+
+                        <label for="check_out">
+                            Check-Out Time
+                        </label>
+
+                        <input
+                            type="text"
+                            id="check_out"
+                            name="check_out"
+                            placeholder="Example: 06:30 PM"
+                            value="{{ attendance[5] or '' }}"
+                        >
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- =====================================
+                     INFORMATION
+                ====================================== -->
+
+                <div class="info-box">
+
+                    <strong>💡 Note:</strong>
+
+                    Enter time in the format
+
+                    <strong>09:30 AM</strong>
+
+                    and
+
+                    <strong>06:30 PM</strong>.
+
+                    Working hours will be calculated automatically
+                    after saving.
+
+                </div>
+
+
+
+                <!-- =====================================
+                     BUTTONS
+                ====================================== -->
+
+                <div class="buttons">
+
+
+                    <button
+                        type="submit"
+                        class="save-btn"
+                    >
+                        💾 Save Changes
+                    </button>
+
+
+                    <a
+                        href="{{ url_for('attendance_report') }}"
+                        class="cancel-btn"
+                    >
+                        ← Cancel
+                    </a>
+
+
+                </div>
+
+
+            </form>
+
+
+        </div>
+
+
+
+        <!-- =========================================
+             FOOTER
+        ========================================= -->
+
+        <div class="footer">
+
+            WorkTrack Employee Management & Attendance System
+
+            <br>
+
+            Admin Panel · BCA Project
+
+        </div>
+
+
+    </div>
+
+
+</body>
+
+</html>

@@ -1,0 +1,1023 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Monthly Attendance Report - WorkTrack</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            margin: 0;
+
+            padding: 25px;
+
+            font-family: Arial, sans-serif;
+
+            background: #eef8f7;
+
+            color: #263238;
+        }
+
+
+        .container {
+
+            max-width: 1250px;
+
+            margin: auto;
+        }
+
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .header {
+
+            background: white;
+
+            padding: 25px;
+
+            border-radius: 15px;
+
+            box-shadow:
+                0 5px 18px rgba(0, 0, 0, 0.08);
+
+            margin-bottom: 20px;
+        }
+
+
+        .header h1 {
+
+            margin: 0;
+
+            color: #0f766e;
+
+            font-size: 27px;
+        }
+
+
+        .header p {
+
+            margin: 7px 0 0;
+
+            color: #607d8b;
+
+            font-size: 14px;
+        }
+
+
+        /* =========================
+           FILTER
+        ========================= */
+
+        .filter-box {
+
+            background: white;
+
+            padding: 20px;
+
+            border-radius: 15px;
+
+            box-shadow:
+                0 5px 18px rgba(0, 0, 0, 0.08);
+
+            margin-bottom: 20px;
+        }
+
+
+        .filter-box label {
+
+            display: block;
+
+            font-weight: bold;
+
+            color: #37474f;
+
+            margin-bottom: 8px;
+        }
+
+
+        .filter-row {
+
+            display: flex;
+
+            gap: 12px;
+
+            align-items: end;
+        }
+
+
+        .filter-row input {
+
+            padding: 12px;
+
+            border: 1px solid #b2dfdb;
+
+            border-radius: 8px;
+
+            outline: none;
+
+            font-size: 14px;
+        }
+
+
+        .filter-row input:focus {
+
+            border-color: #0f766e;
+
+            box-shadow:
+                0 0 0 3px rgba(15, 118, 110, 0.12);
+        }
+
+
+        /* =========================
+           VIEW BUTTON
+        ========================= */
+
+        .view-btn {
+
+            padding: 12px 20px;
+
+            background: #0f766e;
+
+            color: white;
+
+            border: none;
+
+            border-radius: 8px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+
+        .view-btn:hover {
+
+            background: #115e59;
+        }
+
+
+        /* =========================
+           BACK BUTTON
+        ========================= */
+
+        .back-btn {
+
+            display: inline-block;
+
+            margin-top: 15px;
+
+            padding: 10px 16px;
+
+            background: #e2e8f0;
+
+            color: #475569;
+
+            text-decoration: none;
+
+            border-radius: 8px;
+
+            font-weight: bold;
+
+            font-size: 14px;
+        }
+
+
+        .back-btn:hover {
+
+            background: #cbd5e1;
+
+            color: #0f766e;
+        }
+
+
+        /* =========================
+           PRINT BUTTON
+        ========================= */
+
+        .print-btn {
+
+            margin-top: 15px;
+
+            margin-left: 10px;
+
+            padding: 10px 16px;
+
+            background: #2563eb;
+
+            color: white;
+
+            border: none;
+
+            border-radius: 8px;
+
+            font-weight: bold;
+
+            font-size: 14px;
+
+            cursor: pointer;
+        }
+
+
+        .print-btn:hover {
+
+            background: #1d4ed8;
+        }
+
+
+        /* =========================
+           PDF BUTTON
+        ========================= */
+
+        .pdf-btn {
+
+            display: inline-block;
+
+            margin-top: 15px;
+
+            margin-left: 10px;
+
+            padding: 10px 16px;
+
+            background: #dc2626;
+
+            color: white;
+
+            border-radius: 8px;
+
+            font-weight: bold;
+
+            font-size: 14px;
+
+            text-decoration: none;
+
+            cursor: pointer;
+        }
+
+
+        .pdf-btn:hover {
+
+            background: #b91c1c;
+        }
+
+
+        /* =========================
+           SECTION
+        ========================= */
+
+        .section {
+
+            background: white;
+
+            padding: 22px;
+
+            border-radius: 15px;
+
+            box-shadow:
+                0 5px 18px rgba(0, 0, 0, 0.08);
+
+            margin-bottom: 20px;
+
+            overflow: hidden;
+        }
+
+
+        .section h2 {
+
+            margin-top: 0;
+
+            color: #0f766e;
+
+            font-size: 21px;
+        }
+
+
+        /* =========================
+           TABLE
+        ========================= */
+
+        .table-container {
+
+            width: 100%;
+
+            overflow-x: auto;
+        }
+
+
+        table {
+
+            width: 100%;
+
+            border-collapse: collapse;
+
+            min-width: 750px;
+        }
+
+
+        th {
+
+            background: #0f766e;
+
+            color: white;
+
+            padding: 13px;
+
+            text-align: left;
+
+            font-size: 14px;
+        }
+
+
+        td {
+
+            padding: 13px;
+
+            border-bottom: 1px solid #e2e8f0;
+
+            font-size: 14px;
+        }
+
+
+        tr:hover {
+
+            background: #f0fdfa;
+        }
+
+
+        /* =========================
+           STATUS
+        ========================= */
+
+        .present {
+
+            color: #15803d;
+
+            font-weight: bold;
+        }
+
+
+        .absent {
+
+            color: #dc2626;
+
+            font-weight: bold;
+        }
+
+
+        .percentage {
+
+            color: #0f766e;
+
+            font-weight: bold;
+        }
+
+
+        .no-record {
+
+            color: #64748b;
+
+            font-style: italic;
+        }
+
+
+        /* =========================
+           DETAILS
+        ========================= */
+
+        .details-title {
+
+            margin-top: 5px;
+        }
+
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        .footer {
+
+            text-align: center;
+
+            color: #78909c;
+
+            font-size: 13px;
+
+            margin-top: 25px;
+
+            padding-bottom: 10px;
+        }
+
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 650px) {
+
+            body {
+
+                padding: 15px;
+            }
+
+
+            .header {
+
+                padding: 20px;
+            }
+
+
+            .filter-row {
+
+                flex-direction: column;
+
+                align-items: stretch;
+            }
+
+
+            .filter-row input {
+
+                width: 100%;
+            }
+
+
+            .view-btn {
+
+                width: 100%;
+            }
+
+
+            .section {
+
+                padding: 17px;
+            }
+
+
+            .print-btn {
+
+                margin-left: 0;
+
+                width: 100%;
+            }
+
+
+            .pdf-btn {
+
+                margin-left: 0;
+
+                width: 100%;
+
+                text-align: center;
+            }
+
+        }
+
+
+        /* =========================
+           PRINT
+        ========================= */
+
+        @media print {
+
+            body {
+
+                background: white;
+
+                padding: 0;
+            }
+
+
+            .filter-box {
+
+                display: none;
+            }
+
+
+            .footer {
+
+                display: none;
+            }
+
+
+            .header,
+            .section {
+
+                box-shadow: none;
+
+                border: 1px solid #ddd;
+            }
+
+
+            .container {
+
+                max-width: 100%;
+            }
+
+
+            table {
+
+                min-width: 0;
+
+                width: 100%;
+            }
+
+
+            th {
+
+                background: #0f766e !important;
+
+                color: white !important;
+
+                -webkit-print-color-adjust: exact;
+
+                print-color-adjust: exact;
+            }
+
+
+            .present {
+
+                color: #15803d !important;
+
+                -webkit-print-color-adjust: exact;
+
+                print-color-adjust: exact;
+            }
+
+
+            .absent {
+
+                color: #dc2626 !important;
+
+                -webkit-print-color-adjust: exact;
+
+                print-color-adjust: exact;
+            }
+
+
+            .percentage {
+
+                color: #0f766e !important;
+
+                -webkit-print-color-adjust: exact;
+
+                print-color-adjust: exact;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <!-- =========================
+         HEADER
+    ========================= -->
+
+    <div class="header">
+
+        <h1>
+            📈 Monthly Attendance Report
+        </h1>
+
+        <p>
+            View employee attendance statistics month-wise.
+        </p>
+
+    </div>
+
+
+    <!-- =========================
+         MONTH FILTER
+    ========================= -->
+
+    <div class="filter-box">
+
+        <form
+            method="GET"
+            action="/monthly_attendance_report"
+        >
+
+            <div class="filter-row">
+
+                <div>
+
+                    <label for="month">
+                        📅 Select Month
+                    </label>
+
+                    <input
+                        type="month"
+                        id="month"
+                        name="month"
+                        value="{{ selected_month }}"
+                        required
+                    >
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="view-btn"
+                >
+                    🔍 View Report
+                </button>
+
+            </div>
+
+        </form>
+
+
+        <!-- BACK BUTTON -->
+
+        <a
+            href="/dashboard"
+            class="back-btn"
+        >
+            ← Back to Dashboard
+        </a>
+
+
+        <!-- PRINT BUTTON -->
+
+        <button
+            type="button"
+            class="print-btn"
+            onclick="window.print()"
+        >
+            🖨️ Print Report
+        </button>
+
+
+        <!-- PDF BUTTON -->
+
+        <a
+            href="/export_monthly_pdf?month={{ selected_month }}"
+            class="pdf-btn"
+        >
+            📄 Export PDF
+        </a>
+
+    </div>
+
+
+    <!-- =========================
+         EMPLOYEE SUMMARY
+    ========================= -->
+
+    <div class="section">
+
+        <h2>
+            👥 Employee-wise Summary
+        </h2>
+
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Employee ID
+                        </th>
+
+                        <th>
+                            Employee Name
+                        </th>
+
+                        <th>
+                            Department
+                        </th>
+
+                        <th>
+                            Present
+                        </th>
+
+                        <th>
+                            Absent
+                        </th>
+
+                        <th>
+                            Total Days
+                        </th>
+
+                        <th>
+                            Attendance %
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+
+                {% for employee in summary %}
+
+                <tr>
+
+                    <td>
+                        {{ employee[0] }}
+                    </td>
+
+
+                    <td>
+                        {{ employee[1] }}
+                    </td>
+
+
+                    <td>
+                        {{ employee[2] or "-" }}
+                    </td>
+
+
+                    <td class="present">
+
+                        🟢 {{ employee[3] }}
+
+                    </td>
+
+
+                    <td class="absent">
+
+                        🔴 {{ employee[4] }}
+
+                    </td>
+
+
+                    <td>
+
+                        {{ employee[5] }}
+
+                    </td>
+
+
+                    <td class="percentage">
+
+                        {{ employee[6] }}%
+
+                    </td>
+
+                </tr>
+
+
+                {% else %}
+
+                <tr>
+
+                    <td
+                        colspan="7"
+                        style="text-align:center;"
+                    >
+
+                        <span class="no-record">
+
+                            No attendance records found
+                            for {{ selected_month }}.
+
+                        </span>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         ATTENDANCE DETAILS
+    ========================= -->
+
+    <div class="section">
+
+        <h2 class="details-title">
+            📋 Monthly Attendance Details
+        </h2>
+
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Date
+                        </th>
+
+                        <th>
+                            Employee ID
+                        </th>
+
+                        <th>
+                            Employee Name
+                        </th>
+
+                        <th>
+                            Department
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                        <th>
+                            Check-In
+                        </th>
+
+                        <th>
+                            Check-Out
+                        </th>
+
+                        <th>
+                            Attendance Type
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+
+                {% for record in attendance %}
+
+                <tr>
+
+                    <td>
+                        {{ record[0] }}
+                    </td>
+
+
+                    <td>
+                        {{ record[1] }}
+                    </td>
+
+
+                    <td>
+                        {{ record[2] or "-" }}
+                    </td>
+
+
+                    <td>
+                        {{ record[3] or "-" }}
+                    </td>
+
+
+                    <td>
+
+                        {% if record[4] == "Present" %}
+
+                        <span class="present">
+                            🟢 Present
+                        </span>
+
+                        {% else %}
+
+                        <span class="absent">
+                            🔴 {{ record[4] }}
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+
+                        {% if record[5] %}
+
+                            {{ record[5] }}
+
+                        {% else %}
+
+                            -
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+
+                        {% if record[6] %}
+
+                            {{ record[6] }}
+
+                        {% else %}
+
+                            -
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+
+                        {% if record[7] %}
+
+                            {{ record[7] }}
+
+                        {% else %}
+
+                            -
+
+                        {% endif %}
+
+                    </td>
+
+
+                </tr>
+
+                {% else %}
+
+                <tr>
+
+                    <td
+                        colspan="8"
+                        style="text-align:center;"
+                    >
+
+                        <span class="no-record">
+
+                            No attendance records found
+                            for {{ selected_month }}.
+
+                        </span>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         FOOTER
+    ========================= -->
+
+    <div class="footer">
+
+      WorkTrack
+<br>
+Admin Panel · Monthly Attendance Report
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>
+```
