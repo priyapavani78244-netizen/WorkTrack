@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mark Attendance - WorkTrack</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(
+                135deg,
+                #0f766e,
+                #14b8a6
+            );
+            min-height: 100vh;
+            color: #263238;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: auto;
+        }
+
+        /* HEADER */
+
+        .header {
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            color: #0f766e;
+            font-size: 30px;
+        }
+
+        .header p {
+            margin: 8px 0 0;
+            color: #607d8b;
+        }
+
+        /* MAIN CARD */
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+        }
+
+        .card h2 {
+            margin-top: 0;
+            color: #0f766e;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        /* FORM */
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #37474f;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #b2dfdb;
+            border-radius: 9px;
+            font-size: 15px;
+            outline: none;
+            background: #f8ffff;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #0f766e;
+            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
+        }
+
+        /* BUTTON */
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 9px;
+            background: #0f766e;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: #115e59;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 15px rgba(15, 118, 110, 0.25);
+        }
+
+        /* BACK BUTTON */
+
+        .back-btn {
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 9px;
+            background: #ccfbf1;
+            color: #0f766e;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .back-btn:hover {
+            background: #99f6e4;
+        }
+
+        /* FOOTER */
+
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 25px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 600px) {
+
+            body {
+                padding: 15px;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            .card {
+                padding: 22px;
+            }
+
+            .header h1 {
+                font-size: 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <h1>
+            📋 Mark Attendance
+        </h1>
+
+        <p>
+            WorkTrack - Employee Management & Attendance System
+        </p>
+
+    </div>
+
+
+    <!-- FORM CARD -->
+
+    <div class="card">
+
+        <h2>
+            Mark Employee Attendance
+        </h2>
+
+
+        <form method="POST" action="/mark_attendance">
+
+            <!-- EMPLOYEE -->
+
+            <div class="form-group">
+
+                <label for="employee_id">
+                    Employee
+                </label>
+
+                <select
+                    id="employee_id"
+                    name="employee_id"
+                    required
+                >
+
+                    <option value="">
+                        -- Select Employee --
+                    </option>
+
+                    {% for employee in employees %}
+
+                    <option value="{{ employee[1] }}">
+                        {{ employee[1] }} - {{ employee[2] }}
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <!-- DATE -->
+
+            <div class="form-group">
+
+                <label for="date">
+                    Attendance Date
+                </label>
+
+                <input
+                    type="date"
+                    id="date"
+                    name="date"
+                    required
+                >
+
+            </div>
+
+
+            <!-- STATUS -->
+
+            <div class="form-group">
+
+                <label for="status">
+                    Attendance Status
+                </label>
+
+                <select
+                    id="status"
+                    name="status"
+                    required
+                >
+
+                    <option value="">
+                        -- Select Status --
+                    </option>
+
+                    <option value="Present">
+                        🟢 Present
+                    </option>
+
+                    <option value="Absent">
+                        🔴 Absent
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- SUBMIT -->
+
+            <button
+                type="submit"
+                class="submit-btn"
+            >
+                ✅ Mark Attendance
+            </button>
+
+        </form>
+
+
+        <!-- BACK -->
+
+        <a
+            href="/dashboard"
+            class="back-btn"
+        >
+            ← Back to Admin Dashboard
+        </a>
+
+    </div>
+
+
+    <!-- FOOTER -->
+
+    <div class="footer">
+
+        WorkTrack
+
+        <br>
+
+        Admin Panel · BCA Project
+
+    </div>
+
+</div>
+
+
+<script>
+
+    // Automatically set today's date
+
+    const dateInput =
+        document.getElementById("date");
+
+    if (dateInput) {
+
+        const today =
+            new Date().toISOString().split("T")[0];
+
+        dateInput.value = today;
+
+    }
+
+</script>
+
+</body>
+
+</html>

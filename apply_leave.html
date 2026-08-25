@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Apply Leave - EAMS</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px;
+
+            font-family: Arial, sans-serif;
+
+            background: linear-gradient(
+                135deg,
+                #0f766e,
+                #14b8a6
+            );
+
+            min-height: 100vh;
+
+            color: #263238;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: auto;
+        }
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .header {
+            background: white;
+
+            padding: 25px;
+
+            border-radius: 16px;
+
+            box-shadow:
+                0 10px 30px rgba(0, 0, 0, 0.18);
+
+            margin-bottom: 20px;
+
+            text-align: center;
+        }
+
+        .header-icon {
+            font-size: 35px;
+            margin-bottom: 5px;
+        }
+
+        .header h1 {
+            margin: 0;
+
+            color: #0f766e;
+
+            font-size: 30px;
+        }
+
+        .header p {
+            margin: 8px 0 0;
+
+            color: #607d8b;
+
+            font-size: 14px;
+        }
+
+        /* =========================
+           FORM CARD
+        ========================= */
+
+        .form-card {
+            background: white;
+
+            padding: 28px;
+
+            border-radius: 16px;
+
+            box-shadow:
+                0 10px 30px rgba(0, 0, 0, 0.18);
+        }
+
+        .form-card h2 {
+            margin-top: 0;
+
+            color: #0f766e;
+
+            font-size: 21px;
+
+            margin-bottom: 22px;
+        }
+
+        /* =========================
+           FORM GROUP
+        ========================= */
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+
+            margin-bottom: 8px;
+
+            color: #37474f;
+
+            font-weight: bold;
+
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+
+            width: 100%;
+
+            padding: 13px 14px;
+
+            border: 1px solid #b2dfdb;
+
+            border-radius: 9px;
+
+            background: #f8ffff;
+
+            font-family: Arial, sans-serif;
+
+            font-size: 14px;
+
+            outline: none;
+
+            transition: 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+
+            border-color: #0f766e;
+
+            background: white;
+
+            box-shadow:
+                0 0 0 3px rgba(15, 118, 110, 0.12);
+        }
+
+        .form-group textarea {
+
+            min-height: 130px;
+
+            resize: vertical;
+        }
+
+        /* =========================
+           BUTTONS
+        ========================= */
+
+        .buttons {
+
+            display: flex;
+
+            gap: 12px;
+
+            margin-top: 10px;
+        }
+
+        .back-btn,
+        .submit-btn {
+
+            flex: 1;
+
+            padding: 13px;
+
+            border-radius: 9px;
+
+            text-align: center;
+
+            font-weight: bold;
+
+            font-size: 14px;
+
+            cursor: pointer;
+
+            text-decoration: none;
+
+            transition: 0.3s;
+        }
+
+        /* BACK */
+
+        .back-btn {
+
+            background: #e2e8f0;
+
+            color: #475569;
+
+            border: none;
+        }
+
+        .back-btn:hover {
+
+            background: #cbd5e1;
+
+            color: #0f766e;
+        }
+
+        /* SUBMIT */
+
+        .submit-btn {
+
+            background: #0f766e;
+
+            color: white;
+
+            border: none;
+        }
+
+        .submit-btn:hover {
+
+            background: #115e59;
+
+            transform: translateY(-1px);
+
+            box-shadow:
+                0 7px 18px rgba(15, 118, 110, 0.25);
+        }
+
+        /* =========================
+           INFORMATION BOX
+        ========================= */
+
+        .info-box {
+
+            margin-top: 20px;
+
+            padding: 15px;
+
+            border-radius: 10px;
+
+            background: #ccfbf1;
+
+            border-left: 5px solid #0f766e;
+
+            color: #115e59;
+
+            font-size: 13px;
+
+            line-height: 1.6;
+        }
+
+        .info-box strong {
+
+            color: #0f766e;
+        }
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        .footer {
+
+            text-align: center;
+
+            color: white;
+
+            margin-top: 25px;
+
+            padding-bottom: 10px;
+
+            font-size: 13px;
+
+            line-height: 1.6;
+        }
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 600px) {
+
+            body {
+                padding: 15px;
+            }
+
+            .header {
+                padding: 22px 18px;
+            }
+
+            .form-card {
+                padding: 22px 18px;
+            }
+
+            .header h1 {
+                font-size: 25px;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            .back-btn,
+            .submit-btn {
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <!-- =========================
+         HEADER
+    ========================= -->
+
+    <div class="header">
+
+        <div class="header-icon">
+            📝
+        </div>
+
+        <h1>
+            Apply for Leave
+        </h1>
+
+        <p>
+            Submit your leave request to the administrator
+        </p>
+
+    </div>
+
+
+    <!-- =========================
+         FORM
+    ========================= -->
+
+    <div class="form-card">
+
+        <h2>
+            📋 Leave Application
+        </h2>
+
+
+        <form
+            method="POST"
+            action="/apply_leave"
+        >
+
+
+            <!-- LEAVE DATE -->
+
+            <div class="form-group">
+
+                <label for="leave_date">
+                    📅 Leave Date
+                </label>
+
+                <input
+                    type="date"
+                    id="leave_date"
+                    name="leave_date"
+                    required
+                >
+
+            </div>
+
+
+            <!-- REASON -->
+
+            <div class="form-group">
+
+                <label for="reason">
+                    📝 Reason for Leave
+                </label>
+
+                <textarea
+                    id="reason"
+                    name="reason"
+                    placeholder="Enter the reason for your leave..."
+                    required
+                ></textarea>
+
+            </div>
+
+
+            <!-- BUTTONS -->
+
+            <div class="buttons">
+
+                <a
+                    href="/employee_dashboard"
+                    class="back-btn"
+                >
+                    ← Back
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="submit-btn"
+                >
+                    📤 Submit Leave
+                </button>
+
+            </div>
+
+
+        </form>
+
+
+        <!-- INFORMATION -->
+
+        <div class="info-box">
+
+            <strong>ℹ️ Note:</strong>
+
+            Your leave request will be submitted with
+            <strong>Pending</strong> status.
+
+            The administrator will review your request
+            and either approve or reject it.
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =========================
+         FOOTER
+    ========================= -->
+
+    <div class="footer">
+
+        Employee Attendance Management System
+        <br>
+
+        Employee Panel
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>

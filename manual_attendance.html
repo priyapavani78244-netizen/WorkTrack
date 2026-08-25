@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Manual Attendance</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px;
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.10);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 7px;
+            font-weight: bold;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .button {
+            width: 100%;
+            margin-top: 25px;
+            padding: 13px;
+            border: none;
+            border-radius: 8px;
+            background: #198754;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background: #146c43;
+        }
+
+        .back {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #0d6efd;
+        }
+
+        .info {
+            margin-top: 20px;
+            padding: 15px;
+            background: #fff3cd;
+            border-radius: 8px;
+            color: #664d03;
+        }
+
+        @media(max-width:600px) {
+
+            .row {
+                grid-template-columns: 1fr;
+            }
+
+            body {
+                padding: 15px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card">
+
+        <h1>📝 Manual Attendance</h1>
+
+        <div class="subtitle">
+            Add or correct employee attendance
+        </div>
+
+        <form method="POST"
+              action="/manual_attendance">
+
+            <label>
+                Employee *
+            </label>
+
+            <select name="employee_id" required>
+
+                <option value="">
+                    -- Select Employee --
+                </option>
+
+                {% for employee in employees %}
+
+                <option value="{{ employee[0] }}">
+
+                    {{ employee[0] }}
+                    -
+                    {{ employee[1] }}
+
+                    {% if employee[2] %}
+                    ({{ employee[2] }})
+                    {% endif %}
+
+                </option>
+
+                {% endfor %}
+
+            </select>
+
+
+            <div class="row">
+
+                <div>
+
+                    <label>
+                        Date *
+                    </label>
+
+                    <input
+                        type="date"
+                        name="date"
+                        value="{{ today }}"
+                        required
+                    >
+
+                </div>
+
+
+                <div>
+
+                    <label>
+                        Status *
+                    </label>
+
+                    <select name="status" required>
+
+                        <option value="Present">
+                            Present
+                        </option>
+
+                        <option value="Absent">
+                            Absent
+                        </option>
+
+                        <option value="Half Day">
+                            Half Day
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <div class="row">
+
+                <div>
+
+                    <label>
+                        Check-In Time
+                    </label>
+
+                    <input
+                        type="text"
+                        name="check_in"
+                        placeholder="09:30 AM"
+                    >
+
+                </div>
+
+
+                <div>
+
+                    <label>
+                        Check-Out Time
+                    </label>
+
+                    <input
+                        type="text"
+                        name="check_out"
+                        placeholder="06:30 PM"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <label>
+                Attendance Type
+            </label>
+
+            <select name="attendance_type">
+
+                <option value="">
+                    -- Select Type --
+                </option>
+
+                <option value="First Half">
+                    First Half
+                </option>
+
+                <option value="Second Half">
+                    Second Half
+                </option>
+
+                <option value="Full Day">
+                    Full Day
+                </option>
+
+            </select>
+
+
+            <div class="info">
+
+                💡 <b>Important:</b>
+
+                If an employee forgot Check-In or Check-Out,
+                Admin can enter the missing time here.
+
+                <br><br>
+
+                If both were forgotten,
+                Admin can enter both times manually.
+
+                <br><br>
+
+                Example:
+                <b>09:30 AM → 06:30 PM</b>
+
+                will automatically show
+
+                <b>09:00 working hours</b>
+                in the Attendance Report.
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="button">
+
+                💾 Save Attendance
+
+            </button>
+
+        </form>
+
+
+        <a
+            href="/dashboard"
+            class="back">
+
+            ← Back to Dashboard
+
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

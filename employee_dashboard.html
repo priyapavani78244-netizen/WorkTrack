@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Employee Dashboard - WorkTrack</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px;
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(135deg, #f2f8f8, #eef5f5);
+            color: #063b3b;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+        }
+
+        /* WELCOME */
+
+        .welcome {
+            background: linear-gradient(135deg, #0b6963, #117b72);
+            color: white;
+            padding: 22px 25px;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0, 80, 80, 0.15);
+            margin-bottom: 12px;
+        }
+
+        .welcome h1 {
+            margin: 0 0 5px 0;
+            font-size: 25px;
+        }
+
+        .welcome p {
+            margin: 0;
+            font-size: 12px;
+        }
+
+        /* TOP BUTTONS */
+
+        .top-buttons {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .top-buttons a {
+            text-decoration: none;
+            padding: 8px 14px;
+            border-radius: 5px;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .apply-leave {
+            background: #0f766e;
+        }
+
+        .logout {
+            background: #dc3545;
+        }
+
+        /* CARD */
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 14px;
+            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+        }
+
+        .card h2 {
+            margin: 0 0 12px 0;
+            font-size: 16px;
+            color: #063b3b;
+        }
+
+        /* DETAILS */
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .detail-box {
+            background: #f3fbfb;
+            border: 1px solid #b8eeee;
+            border-radius: 6px;
+            padding: 10px;
+        }
+
+        .label {
+            display: block;
+            font-size: 8px;
+            font-weight: bold;
+            color: #117b72;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .value {
+            font-size: 11px;
+            color: #164d4d;
+            word-break: break-word;
+        }
+
+        /* MESSAGE */
+
+        .message {
+            background: #e8f8f5;
+            border: 1px solid #91ddd4;
+            color: #08675f;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 14px;
+            font-size: 12px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        /* TODAY */
+
+        .today-box {
+            background: #f7ffff;
+            border: 1px solid #a9e8e2;
+            border-radius: 7px;
+            padding: 15px;
+        }
+
+        .today-date {
+            font-size: 11px;
+            margin-bottom: 8px;
+        }
+
+        .attendance-status {
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .not-marked {
+            color: #e67e22;
+        }
+
+        .present {
+            color: #119b35;
+        }
+
+        /* ACTION */
+
+        .attendance-action {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #d7eeee;
+        }
+
+        .attendance-action h3 {
+            margin: 0 0 10px 0;
+            font-size: 13px;
+            color: #063b3b;
+        }
+
+        .form-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        select {
+            padding: 9px 12px;
+            border: 1px solid #a9dedd;
+            border-radius: 5px;
+            background: white;
+            font-size: 12px;
+            color: #164d4d;
+        }
+
+        button {
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            padding: 9px 15px;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .check-in-btn {
+            background: #0f766e;
+        }
+
+        .check-in-btn:hover {
+            background: #115e59;
+        }
+
+        .check-out-btn {
+            background: #dc3545;
+        }
+
+        .check-out-btn:hover {
+            background: #bd2736;
+        }
+
+        .disabled-btn {
+            background: #999;
+            cursor: not-allowed;
+        }
+
+        /* TIME */
+
+        .time-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .time-box {
+            background: #f2fbfa;
+            border: 1px solid #b7e8e3;
+            border-radius: 6px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .time-title {
+            font-size: 9px;
+            color: #117b72;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .time-value {
+            font-size: 14px;
+            font-weight: bold;
+            color: #063b3b;
+        }
+
+        /* STATISTICS */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
+            border-top: 2px solid #117b72;
+        }
+
+        .stat-title {
+            font-size: 9px;
+            margin-bottom: 6px;
+        }
+
+        .stat-number {
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        .total {
+            color: #063b3b;
+        }
+
+        .green {
+            color: #16a637;
+        }
+
+        .red {
+            color: #e6293b;
+        }
+
+        .orange {
+            color: #f39c12;
+        }
+
+        /* PROGRESS */
+
+        .progress-area {
+            background: #f3fbfb;
+            border: 1px solid #b8eeee;
+            border-radius: 7px;
+            padding: 12px;
+        }
+
+        .progress-title {
+            font-size: 11px;
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 14px;
+            background: #dce9e8;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0b8178, #16a085);
+            border-radius: 20px;
+            width: 0%;
+        }
+
+        .percentage-text {
+            margin-top: 5px;
+            font-size: 10px;
+            color: #557070;
+        }
+
+        /* TABLE */
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 10px;
+        }
+
+        th {
+            background: #0d5752;
+            color: white;
+            padding: 8px 6px;
+            text-align: left;
+            font-size: 9px;
+        }
+
+        td {
+            padding: 8px 6px;
+            border-bottom: 1px solid #d9eeee;
+            color: #355555;
+            font-size: 9px;
+        }
+
+        tr:hover {
+            background: #f4fbfb;
+        }
+
+        .status-present {
+            color: #16a637;
+            font-weight: bold;
+        }
+
+        .status-absent {
+            color: #e6293b;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            color: #f39c12;
+            font-weight: bold;
+        }
+
+        .status-approved {
+            color: #16a637;
+            font-weight: bold;
+        }
+
+        .status-rejected {
+            color: #e6293b;
+            font-weight: bold;
+        }
+
+        .empty {
+            text-align: center;
+            color: #777;
+            padding: 15px;
+        }
+
+        /* FOOTER */
+
+        footer {
+            text-align: center;
+            color: #779090;
+            font-size: 8px;
+            margin-top: 18px;
+            padding-bottom: 10px;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 800px) {
+
+            body {
+                padding: 15px;
+            }
+
+            .details-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .stats {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+        }
+
+        @media (max-width: 500px) {
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .time-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            select,
+            button {
+                width: 100%;
+            }
+
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- WELCOME -->
+
+    <div class="welcome">
+
+        <h1>
+            Welcome {{ employee_name }} 👋
+        </h1>
+
+        <p>
+            Welcome to your WorkTrack Employee Dashboard.
+        </p>
+
+    </div>
+
+    <!-- BUTTONS -->
+
+    <div class="top-buttons">
+
+        <a href="/apply_leave" class="apply-leave">
+            📝 Apply Leave
+        </a>
+
+        <a href="/logout" class="logout">
+            🚪 Logout
+        </a>
+
+    </div>
+
+    <!-- MESSAGE -->
+
+    {% if message %}
+
+    <div class="message">
+        {{ message }}
+    </div>
+
+    {% endif %}
+
+    <!-- EMPLOYEE DETAILS -->
+
+    <div class="card">
+
+        <h2>
+            👤 Employee Details
+        </h2>
+
+        <div class="details-grid">
+
+            <div class="detail-box">
+
+                <span class="label">
+                    Employee ID
+                </span>
+
+                <span class="value">
+                    {{ employee_id }}
+                </span>
+
+            </div>
+
+            <div class="detail-box">
+
+                <span class="label">
+                    Employee Name
+                </span>
+
+                <span class="value">
+                    {{ employee_name }}
+                </span>
+
+            </div>
+
+            <div class="detail-box">
+
+                <span class="label">
+                    Department
+                </span>
+
+                <span class="value">
+                    {{ employee_department }}
+                </span>
+
+            </div>
+
+            <div class="detail-box">
+
+                <span class="label">
+                    Email
+                </span>
+
+                <span class="value">
+                    {{ employee_email }}
+                </span>
+
+            </div>
+
+            <div class="detail-box">
+
+                <span class="label">
+                    Mobile Number
+                </span>
+
+                <span class="value">
+                    {{ employee_mobile }}
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- TODAY'S ATTENDANCE -->
+
+    <div class="card">
+
+        <h2>
+            🕘 Today's Attendance
+        </h2>
+
+        <div class="today-box">
+
+            <div class="today-date">
+                <strong>Date:</strong>
+                {{ today }}
+            </div>
+
+            {% if today_attendance %}
+
+                {% if today_attendance[2] == "Present" %}
+
+                <div class="attendance-status present">
+                    Attendance: Present ✅
+                </div>
+
+                {% else %}
+
+                <div class="attendance-status not-marked">
+                    Attendance: {{ today_attendance[2] }}
+                </div>
+
+                {% endif %}
+
+                <div class="time-grid">
+
+                    <div class="time-box">
+
+                        <div class="time-title">
+                            ATTENDANCE TYPE
+                        </div>
+
+                        <div class="time-value">
+
+                            {% if today_attendance[5] %}
+                                {{ today_attendance[5] }}
+                            {% else %}
+                                -
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                    <div class="time-box">
+
+                        <div class="time-title">
+                            CHECK IN
+                        </div>
+
+                        <div class="time-value">
+
+                            {% if today_attendance[3] %}
+                                {{ today_attendance[3] }}
+                            {% else %}
+                                -
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                    <div class="time-box">
+
+                        <div class="time-title">
+                            CHECK OUT
+                        </div>
+
+                        <div class="time-value">
+
+                            {% if today_attendance[4] %}
+                                {{ today_attendance[4] }}
+                            {% else %}
+                                -
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="time-box" style="margin-top:10px;">
+
+                    <div class="time-title">
+                        WORKING HOURS
+                    </div>
+
+                    <div class="time-value">
+                        {{ today_working_hours }}
+                    </div>
+
+                </div>
+
+                {% if not today_attendance[4] %}
+
+                <div class="attendance-action">
+
+                    <h3>
+                        🕐 Check-Out
+                    </h3>
+
+                    <form method="POST" action="/employee_check_out">
+
+                        <div class="form-row">
+
+                            <button
+                                type="submit"
+                                class="check-out-btn">
+
+                                🔴 Check-Out Now
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+                {% else %}
+
+                <div class="attendance-action">
+
+                    <button
+                        type="button"
+                        class="disabled-btn"
+                        disabled>
+
+                        ✅ Today's Attendance Completed
+
+                    </button>
+
+                </div>
+
+                {% endif %}
+
+            {% else %}
+
+                <div class="attendance-status not-marked">
+
+                    Attendance: Not Marked
+
+                </div>
+
+                <div style="
+                    font-size:11px;
+                    color:#557070;
+                    margin-bottom:12px;
+                ">
+
+                    You can mark your attendance using
+                    Check-In below.
+
+                </div>
+
+                <div class="attendance-action">
+
+                    <h3>
+                        🟢 Check-In
+                    </h3>
+
+                    <form
+                        method="POST"
+                        action="/employee_check_in">
+
+                        <div class="form-row">
+
+                            <select
+                                name="attendance_type"
+                                required>
+
+                                <option value="">
+                                    Select Attendance Type
+                                </option>
+
+                                <option value="First Half">
+                                    First Half
+                                </option>
+
+                                <option value="Second Half">
+                                    Second Half
+                                </option>
+
+                            </select>
+
+                            <button
+                                type="submit"
+                                class="check-in-btn">
+
+                                🟢 Check-In Now
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    <!-- STATISTICS -->
+
+    <div class="stats">
+
+        <div class="stat-card">
+
+            <div class="stat-title">
+                Total Days
+            </div>
+
+            <div class="stat-number total">
+                {{ total_days }}
+            </div>
+
+        </div>
+
+        <div class="stat-card">
+
+            <div class="stat-title">
+                🟢 Present
+            </div>
+
+            <div class="stat-number green">
+                {{ present }}
+            </div>
+
+        </div>
+
+        <div class="stat-card">
+
+            <div class="stat-title">
+                🔴 Absent
+            </div>
+
+            <div class="stat-number red">
+                {{ absent }}
+            </div>
+
+        </div>
+
+        <div class="stat-card">
+
+            <div class="stat-title">
+                🟠 Pending Leave
+            </div>
+
+            <div class="stat-number orange">
+                {{ pending_leave }}
+            </div>
+
+        </div>
+
+        <div class="stat-card">
+
+            <div class="stat-title">
+                🟢 Approved Leave
+            </div>
+
+            <div class="stat-number green">
+                {{ approved_leave }}
+            </div>
+
+        </div>
+
+        <div class="stat-card">
+
+            <div class="stat-title">
+                🔴 Rejected Leave
+            </div>
+
+            <div class="stat-number red">
+                {{ rejected_leave }}
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ATTENDANCE OVERVIEW -->
+
+    <div class="card">
+
+        <h2>
+            📊 Attendance Overview
+        </h2>
+
+        <div class="progress-area">
+
+            <div class="progress-title">
+                Attendance {{ percentage }}%
+            </div>
+
+            <div class="progress-bar">
+
+                <div
+                    class="progress-fill"
+                    data-percentage="{{ percentage }}">
+                </div>
+
+            </div>
+
+            <div class="percentage-text">
+
+                {{ percentage }}% attendance based on
+                recorded attendance.
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- MY ATTENDANCE -->
+
+    <div class="card">
+
+        <h2>
+            📅 My Attendance
+        </h2>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Attendance Type</th>
+                        <th>Check In</th>
+                        <th>Check Out</th>
+                        <th>Working Hours</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% if attendance %}
+
+                        {% for record in attendance %}
+
+                        <tr>
+
+                            <td>
+                                {{ record[0] }}
+                            </td>
+
+                            <td>
+
+                                {% if record[1] == "Present" %}
+
+                                <span class="status-present">
+                                    {{ record[1] }}
+                                </span>
+
+                                {% elif record[1] == "Absent" %}
+
+                                <span class="status-absent">
+                                    {{ record[1] }}
+                                </span>
+
+                                {% else %}
+
+                                    {{ record[1] }}
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+
+                                {% if record[4] %}
+                                    {{ record[4] }}
+                                {% else %}
+                                    -
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+
+                                {% if record[2] %}
+                                    {{ record[2] }}
+                                {% else %}
+                                    -
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+
+                                {% if record[3] %}
+                                    {{ record[3] }}
+                                {% else %}
+                                    -
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+                                {{ record[5] }}
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <tr>
+
+                            <td colspan="6" class="empty">
+                                No attendance records found.
+                            </td>
+
+                        </tr>
+
+                    {% endif %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <!-- MY LEAVE HISTORY -->
+
+    <div class="card">
+
+        <h2>
+            📋 My Leave History
+        </h2>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Leave Date
+                        </th>
+
+                        <th>
+                            Reason
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% if leave_history %}
+
+                        {% for leave in leave_history %}
+
+                        <tr>
+
+                            <td>
+                                {{ leave[0] }}
+                            </td>
+
+                            <td>
+
+                                {% if leave[1] %}
+                                    {{ leave[1] }}
+                                {% else %}
+                                    -
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+
+                                {% if leave[2] == "Pending" %}
+
+                                <span class="status-pending">
+                                    {{ leave[2] }}
+                                </span>
+
+                                {% elif leave[2] == "Approved" %}
+
+                                <span class="status-approved">
+                                    {{ leave[2] }}
+                                </span>
+
+                                {% elif leave[2] == "Rejected" %}
+
+                                <span class="status-rejected">
+                                    {{ leave[2] }}
+                                </span>
+
+                                {% else %}
+
+                                    {{ leave[2] }}
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <tr>
+
+                            <td colspan="3" class="empty">
+                                No leave history found.
+                            </td>
+
+                        </tr>
+
+                    {% endif %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        WorkTrack
+        <br>
+        Employee Panel
+
+    </footer>
+
+</div>
+
+<script>
+
+    const progressBar =
+        document.querySelector(".progress-fill");
+
+    if (progressBar) {
+
+        const percentage =
+            parseFloat(
+                progressBar.getAttribute("data-percentage")
+            ) || 0;
+
+        const safePercentage =
+            Math.max(0, Math.min(100, percentage));
+
+        progressBar.style.width =
+            safePercentage + "%";
+
+    }
+
+</script>
+
+</body>
+
+</html>

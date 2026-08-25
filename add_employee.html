@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Add Employee - WorkTrack</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #f1f7f6;
+            color: #123333;
+            min-height: 100vh;
+        }
+
+        /* ================================
+           HEADER
+        ================================= */
+
+        .top-header {
+            background: #073f3f;
+            color: white;
+
+            padding: 18px 35px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .logo span {
+            display: block;
+            font-size: 10px;
+            font-weight: normal;
+            opacity: 0.8;
+            letter-spacing: 0;
+            margin-top: 3px;
+        }
+
+        .header-title {
+            font-size: 14px;
+        }
+
+        /* ================================
+           MAIN CONTAINER
+        ================================= */
+
+        .container {
+            width: 92%;
+            max-width: 850px;
+
+            margin: 35px auto;
+        }
+
+        /* ================================
+           PAGE HEADER
+        ================================= */
+
+        .page-header {
+            background: white;
+
+            padding: 22px 25px;
+
+            border-radius: 12px;
+
+            margin-bottom: 20px;
+
+            border-left: 5px solid #087f7b;
+
+            box-shadow:
+                0 4px 15px rgba(7, 63, 63, 0.08);
+        }
+
+        .page-header h1 {
+            margin: 0 0 7px;
+
+            color: #073f3f;
+
+            font-size: 25px;
+        }
+
+        .page-header p {
+            margin: 0;
+
+            color: #6b7f7f;
+
+            font-size: 14px;
+
+            line-height: 1.5;
+        }
+
+        /* ================================
+           FORM CARD
+        ================================= */
+
+        .form-card {
+            background: #ffffff;
+
+            padding: 30px;
+
+            border-radius: 14px;
+
+            box-shadow:
+                0 5px 18px rgba(7, 63, 63, 0.10);
+
+            border: 1px solid #d8e8e7;
+        }
+
+        /* ================================
+           FORM GROUP
+        ================================= */
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+
+            margin-bottom: 8px;
+
+            font-weight: bold;
+
+            color: #073f3f;
+
+            font-size: 14px;
+        }
+
+        .required {
+            color: #d9534f;
+        }
+
+        /* ================================
+           INPUT
+        ================================= */
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+
+            padding: 13px 14px;
+
+            border: 1px solid #bfd6d5;
+
+            border-radius: 8px;
+
+            background: #fbfefe;
+
+            color: #123333;
+
+            font-size: 14px;
+
+            outline: none;
+
+            transition: 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+
+            border-color: #087f7b;
+
+            box-shadow:
+                0 0 0 3px rgba(8, 127, 123, 0.12);
+
+            background: white;
+        }
+
+        .form-group input::placeholder {
+            color: #8a9a9a;
+        }
+
+        /* ================================
+           TWO COLUMN FORM
+        ================================= */
+
+        .form-row {
+
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 18px;
+        }
+
+        /* ================================
+           BUTTONS
+        ================================= */
+
+        .button-area {
+
+            display: flex;
+
+            gap: 12px;
+
+            margin-top: 10px;
+        }
+
+        .save-btn {
+
+            flex: 1;
+
+            background: #087f7b;
+
+            color: white;
+
+            border: none;
+
+            padding: 13px 20px;
+
+            border-radius: 8px;
+
+            font-weight: bold;
+
+            font-size: 14px;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        .save-btn:hover {
+
+            background: #066b68;
+
+            transform: translateY(-1px);
+        }
+
+        .back-btn {
+
+            flex: 1;
+
+            text-align: center;
+
+            text-decoration: none;
+
+            background: #e8f5f4;
+
+            color: #087f7b;
+
+            border: 1px solid #b7dcda;
+
+            padding: 13px 20px;
+
+            border-radius: 8px;
+
+            font-weight: bold;
+
+            font-size: 14px;
+
+            transition: 0.2s;
+        }
+
+        .back-btn:hover {
+
+            background: #d8eeec;
+
+            color: #073f3f;
+        }
+
+        /* ================================
+           INFORMATION BOX
+        ================================= */
+
+        .info-box {
+
+            margin-top: 22px;
+
+            padding: 15px;
+
+            background: #e8f5f4;
+
+            border: 1px solid #c6e3e1;
+
+            border-radius: 9px;
+
+            color: #245555;
+
+            font-size: 13px;
+
+            line-height: 1.6;
+        }
+
+        .info-box strong {
+            color: #073f3f;
+        }
+
+        /* ================================
+           FOOTER
+        ================================= */
+
+        .footer {
+
+            text-align: center;
+
+            color: #789090;
+
+            font-size: 12px;
+
+            margin: 30px 0 20px;
+
+            line-height: 1.6;
+        }
+
+        /* ================================
+           TABLET
+        ================================= */
+
+        @media (max-width: 800px) {
+
+            .top-header {
+
+                padding: 16px 22px;
+            }
+
+            .container {
+
+                width: 94%;
+
+                margin: 25px auto;
+            }
+
+            .form-card {
+
+                padding: 25px;
+            }
+
+        }
+
+        /* ================================
+           MOBILE
+        ================================= */
+
+        @media (max-width: 600px) {
+
+            .top-header {
+
+                padding: 15px;
+
+                flex-direction: column;
+
+                align-items: flex-start;
+
+                gap: 8px;
+            }
+
+            .logo {
+
+                font-size: 20px;
+            }
+
+            .logo span {
+
+                font-size: 9px;
+            }
+
+            .header-title {
+
+                font-size: 12px;
+            }
+
+            .container {
+
+                width: 94%;
+
+                margin: 18px auto;
+            }
+
+            .page-header {
+
+                padding: 18px;
+
+                margin-bottom: 15px;
+            }
+
+            .page-header h1 {
+
+                font-size: 21px;
+            }
+
+            .page-header p {
+
+                font-size: 12px;
+            }
+
+            .form-card {
+
+                padding: 20px;
+
+                border-radius: 12px;
+            }
+
+            .form-row {
+
+                grid-template-columns: 1fr;
+
+                gap: 0;
+            }
+
+            .form-group {
+
+                margin-bottom: 17px;
+            }
+
+            .form-group label {
+
+                font-size: 13px;
+            }
+
+            .form-group input,
+            .form-group select {
+
+                padding: 13px;
+
+                font-size: 14px;
+            }
+
+            .button-area {
+
+                flex-direction: column;
+
+                gap: 10px;
+            }
+
+            .save-btn,
+            .back-btn {
+
+                width: 100%;
+
+                padding: 14px;
+            }
+
+            .info-box {
+
+                font-size: 12px;
+
+                padding: 13px;
+            }
+
+            .footer {
+
+                font-size: 11px;
+
+                margin-top: 22px;
+            }
+
+        }
+
+        /* ================================
+           VERY SMALL MOBILE
+        ================================= */
+
+        @media (max-width: 380px) {
+
+            .container {
+
+                width: 96%;
+            }
+
+            .form-card {
+
+                padding: 16px;
+            }
+
+            .page-header h1 {
+
+                font-size: 19px;
+            }
+
+            .page-header p {
+
+                font-size: 11px;
+            }
+
+            .form-group input {
+
+                font-size: 13px;
+            }
+
+            .save-btn,
+            .back-btn {
+
+                font-size: 13px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+    <!-- ================================
+         HEADER
+    ================================= -->
+
+    <div class="top-header">
+
+        <div class="logo">
+
+           WorkTrack
+
+            <span>
+                Employee Management & Attendance System
+            </span>
+
+        </div>
+
+        <div class="header-title">
+
+            👤 Admin Panel
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================
+         MAIN
+    ================================= -->
+
+    <div class="container">
+
+
+        <!-- PAGE HEADER -->
+
+        <div class="page-header">
+
+            <h1>
+                👤 Add Employee
+            </h1>
+
+            <p>
+                Add a new employee to the WorkTrack
+            </p>
+
+        </div>
+
+
+        <!-- FORM CARD -->
+
+        <div class="form-card">
+
+            <form method="POST" action="/add_employee">
+
+
+                <!-- EMPLOYEE ID + NAME -->
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label>
+                            Employee ID
+                            <span class="required">*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            name="employee_id"
+                            placeholder="Enter Employee ID"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Employee Name
+                        </label>
+
+                        <input
+                            type="text"
+                            name="name"
+                            placeholder="Enter Employee Name"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- EMAIL + DEPARTMENT -->
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label>
+                            Email
+                        </label>
+
+                        <input
+                            type="email"
+                            name="email"
+                            placeholder="Enter Email Address"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Department
+                        </label>
+
+                        <input
+                            type="text"
+                            name="department"
+                            placeholder="Enter Department"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- MOBILE -->
+
+                <div class="form-group">
+
+                    <label>
+                        Mobile Number
+                    </label>
+
+                    <input
+                        type="tel"
+                        name="mobile"
+                        placeholder="Enter Mobile Number"
+                        inputmode="numeric"
+                    >
+
+                </div>
+
+
+                <!-- BUTTONS -->
+
+                <div class="button-area">
+
+                    <button
+                        type="submit"
+                        class="save-btn"
+                    >
+
+                        💾 Save Employee
+
+                    </button>
+
+
+                    <a
+                        href="/dashboard"
+                        class="back-btn"
+                    >
+
+                        ← Back to Dashboard
+
+                    </a>
+
+                </div>
+
+            </form>
+
+
+            <!-- INFO -->
+
+            <div class="info-box">
+
+                <strong>💡 Note:</strong>
+
+                Employee ID must be unique.
+
+                After adding the employee, you can view and manage
+                the employee from the
+
+                <strong>Employee List</strong>.
+
+            </div>
+
+        </div>
+
+
+        <!-- FOOTER -->
+
+        <div class="footer">
+
+            WorkTrack
+
+            <br>
+
+            Admin Panel ·
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

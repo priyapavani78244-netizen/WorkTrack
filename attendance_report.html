@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Attendance Report - WorkTrack</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            margin: 0;
+            padding: 0;
+
+            font-family: Arial, sans-serif;
+
+            background: #F1F7F6;
+
+            color: #123333;
+
+        }
+
+
+        /* =========================================
+           HEADER
+        ========================================= */
+
+        .top-header {
+
+            background: #073F3F;
+
+            color: white;
+
+            padding: 18px 35px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            box-shadow:
+                0 3px 10px rgba(0, 0, 0, 0.12);
+
+        }
+
+
+        .logo {
+
+            font-size: 22px;
+
+            font-weight: bold;
+
+            letter-spacing: 1px;
+
+        }
+
+
+        .logo span {
+
+            display: block;
+
+            font-size: 10px;
+
+            font-weight: normal;
+
+            opacity: 0.8;
+
+            letter-spacing: 0;
+
+        }
+
+
+        .header-title {
+
+            font-size: 14px;
+
+        }
+
+
+        /* =========================================
+           CONTAINER
+        ========================================= */
+
+        .container {
+
+            width: 96%;
+
+            max-width: 1400px;
+
+            margin: 30px auto;
+
+        }
+
+
+        /* =========================================
+           CARD
+        ========================================= */
+
+        .card {
+
+            background: white;
+
+            border-radius: 14px;
+
+            padding: 25px;
+
+            border: 1px solid #D8E8E7;
+
+            box-shadow:
+                0 5px 18px rgba(7, 63, 63, 0.08);
+
+        }
+
+
+        /* =========================================
+           TITLE
+        ========================================= */
+
+        .card-header {
+
+            border-left: 5px solid #087F7B;
+
+            padding-left: 15px;
+
+            margin-bottom: 25px;
+
+        }
+
+
+        .card-header h1 {
+
+            margin: 0 0 7px;
+
+            color: #073F3F;
+
+            font-size: 25px;
+
+        }
+
+
+        .card-header p {
+
+            margin: 0;
+
+            color: #718585;
+
+            font-size: 13px;
+
+        }
+
+
+        /* =========================================
+           TABLE
+        ========================================= */
+
+        .table-wrapper {
+
+            width: 100%;
+
+            overflow-x: auto;
+
+        }
+
+
+        table {
+
+            width: 100%;
+
+            border-collapse: collapse;
+
+            min-width: 1000px;
+
+        }
+
+
+        th {
+
+            background: #073F3F;
+
+            color: white;
+
+            padding: 13px 10px;
+
+            font-size: 12px;
+
+            text-align: center;
+
+            white-space: nowrap;
+
+        }
+
+
+        td {
+
+            padding: 12px 10px;
+
+            border-bottom: 1px solid #E1ECEB;
+
+            font-size: 12px;
+
+            text-align: center;
+
+            white-space: nowrap;
+
+        }
+
+
+        tbody tr:hover {
+
+            background: #F4FAF9;
+
+        }
+
+
+        /* =========================================
+           STATUS
+        ========================================= */
+
+        .status {
+
+            display: inline-block;
+
+            padding: 5px 10px;
+
+            border-radius: 20px;
+
+            font-size: 11px;
+
+            font-weight: bold;
+
+        }
+
+
+        .present {
+
+            background: #DDF4E8;
+
+            color: #167346;
+
+        }
+
+
+        .absent {
+
+            background: #FBE0E0;
+
+            color: #B52B2B;
+
+        }
+
+
+        /* =========================================
+           ATTENDANCE TYPE
+        ========================================= */
+
+        .type {
+
+            color: #087F7B;
+
+            font-weight: bold;
+
+        }
+
+
+        /* =========================================
+           WORKING HOURS
+        ========================================= */
+
+        .hours {
+
+            font-weight: bold;
+
+            color: #073F3F;
+
+        }
+
+
+        /* =========================================
+           EDIT BUTTON
+        ========================================= */
+
+        .edit-btn {
+
+            display: inline-block;
+
+            text-decoration: none;
+
+            background: #087F7B;
+
+            color: white;
+
+            padding: 7px 13px;
+
+            border-radius: 6px;
+
+            font-size: 11px;
+
+            font-weight: bold;
+
+            transition: 0.2s;
+
+        }
+
+
+        .edit-btn:hover {
+
+            background: #066B68;
+
+            transform: translateY(-1px);
+
+        }
+
+
+        /* =========================================
+           BACK BUTTON
+        ========================================= */
+
+        .bottom-buttons {
+
+            margin-top: 25px;
+
+            display: flex;
+
+            gap: 12px;
+
+            flex-wrap: wrap;
+
+        }
+
+
+        .back-btn {
+
+            display: inline-block;
+
+            text-decoration: none;
+
+            background: #E8F5F4;
+
+            color: #087F7B;
+
+            border: 1px solid #B7DCDA;
+
+            padding: 11px 18px;
+
+            border-radius: 7px;
+
+            font-size: 12px;
+
+            font-weight: bold;
+
+        }
+
+
+        .back-btn:hover {
+
+            background: #D8EEEC;
+
+        }
+
+
+        .manual-btn {
+
+            display: inline-block;
+
+            text-decoration: none;
+
+            background: #087F7B;
+
+            color: white;
+
+            padding: 11px 18px;
+
+            border-radius: 7px;
+
+            font-size: 12px;
+
+            font-weight: bold;
+
+        }
+
+
+        .manual-btn:hover {
+
+            background: #066B68;
+
+        }
+
+
+        /* =========================================
+           EMPTY
+        ========================================= */
+
+        .empty {
+
+            text-align: center;
+
+            padding: 40px;
+
+            color: #718585;
+
+            font-size: 14px;
+
+        }
+
+
+        /* =========================================
+           FOOTER
+        ========================================= */
+
+        .footer {
+
+            text-align: center;
+
+            color: #789090;
+
+            font-size: 12px;
+
+            margin: 25px 0;
+
+        }
+
+
+        /* =========================================
+           MOBILE
+        ========================================= */
+
+        @media (max-width: 700px) {
+
+            .top-header {
+
+                padding: 15px 20px;
+
+            }
+
+
+            .header-title {
+
+                display: none;
+
+            }
+
+
+            .container {
+
+                width: 94%;
+
+                margin: 20px auto;
+
+            }
+
+
+            .card {
+
+                padding: 18px;
+
+            }
+
+
+            .card-header h1 {
+
+                font-size: 21px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================================
+         HEADER
+    ========================================= -->
+
+    <div class="top-header">
+
+    <div class="logo">
+        WorkTrack
+        <span>
+            Employee Management & Attendance System
+        </span>
+    </div>
+
+    <div class="header-title">
+        📊 Attendance Report
+    </div>
+
+</div>
+
+
+    <!-- =========================================
+         MAIN CONTAINER
+    ========================================= -->
+
+    <div class="container">
+
+
+        <div class="card">
+
+
+            <!-- =====================================
+                 TITLE
+            ====================================== -->
+
+            <div class="card-header">
+
+                <h1>
+                    📊 Attendance Report
+                </h1>
+
+
+                <p>
+                    View and edit employee attendance records.
+                </p>
+
+            </div>
+
+
+
+            <!-- =====================================
+                 TABLE
+            ====================================== -->
+
+            <div class="table-wrapper">
+
+
+                {% if attendance %}
+
+
+                <table>
+
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                ID
+                            </th>
+
+                            <th>
+                                Employee ID
+                            </th>
+
+                            <th>
+                                Date
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Check-In
+                            </th>
+
+                            <th>
+                                Check-Out
+                            </th>
+
+                            <th>
+                                Attendance Type
+                            </th>
+
+                            <th>
+                                Working Hours
+                            </th>
+
+                            <th>
+                                Action
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+
+                    <tbody>
+
+
+                        {% for record in attendance %}
+
+
+                        <tr>
+
+
+                            <!-- ID -->
+
+                            <td>
+
+                                {{ record[0] }}
+
+                            </td>
+
+
+
+                            <!-- EMPLOYEE ID -->
+
+                            <td>
+
+                                <strong>
+                                    {{ record[1] }}
+                                </strong>
+
+                            </td>
+
+
+
+                            <!-- DATE -->
+
+                            <td>
+
+                                {{ record[2] }}
+
+                            </td>
+
+
+
+                            <!-- STATUS -->
+
+                            <td>
+
+
+                                {% if record[3] == "Present" %}
+
+
+                                <span class="status present">
+
+                                    🟢 Present
+
+                                </span>
+
+
+                                {% else %}
+
+
+                                <span class="status absent">
+
+                                    🔴 Absent
+
+                                </span>
+
+
+                                {% endif %}
+
+
+                            </td>
+
+
+
+                            <!-- CHECK IN -->
+
+                            <td>
+
+                                {{ record[4] or "-" }}
+
+                            </td>
+
+
+
+                            <!-- CHECK OUT -->
+
+                            <td>
+
+                                {{ record[5] or "-" }}
+
+                            </td>
+
+
+
+                            <!-- ATTENDANCE TYPE -->
+
+                            <td>
+
+
+                                {% if record[6] %}
+
+
+                                <span class="type">
+
+                                    {{ record[6] }}
+
+                                </span>
+
+
+                                {% else %}
+
+                                -
+
+                                {% endif %}
+
+
+                            </td>
+
+
+
+                            <!-- WORKING HOURS -->
+
+                            <td>
+
+                                <span class="hours">
+
+                                    {{ record[7] }}
+
+                                </span>
+
+                            </td>
+
+
+
+                            <!-- EDIT -->
+
+                            <td>
+                            </td>
+
+
+                        </tr>
+
+
+                        {% endfor %}
+
+
+                    </tbody>
+
+
+                </table>
+
+
+                {% else %}
+
+
+                <div class="empty">
+
+                    📭 No attendance records found.
+
+                </div>
+
+
+                {% endif %}
+
+
+            </div>
+
+
+
+            <!-- =====================================
+                 BUTTONS
+            ====================================== -->
+
+            <div class="bottom-buttons">
+
+
+                <a
+                    href="/dashboard"
+                    class="back-btn"
+                >
+
+                    ← Back to Dashboard
+
+                </a>
+
+
+
+                <a
+                    href="/manual_attendance"
+                    class="manual-btn"
+                >
+
+                    ➕ Manual Attendance
+
+                </a>
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- =========================================
+             FOOTER
+        ========================================= -->
+
+        <div class="footer">
+    WorkTrack
+    <br>
+    Admin Panel
+</div>
+
+    </div>
+
+
+</body>
+
+</html>

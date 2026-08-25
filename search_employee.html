@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Search Employee - EAMS</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px;
+
+            font-family: Arial, sans-serif;
+
+            background: #F1F7F6;
+
+            min-height: 100vh;
+
+            color: #263838;
+        }
+
+        /* ================================
+           CONTAINER
+        ================================= */
+
+        .container {
+            width: 94%;
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        /* ================================
+           HEADER
+        ================================= */
+
+        .header {
+            background: white;
+
+            padding: 25px;
+
+            border-radius: 14px;
+
+            border-left: 5px solid #087F7B;
+
+            box-shadow:
+                0 4px 15px rgba(7, 63, 63, 0.08);
+
+            margin-bottom: 20px;
+
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+
+            color: #073F3F;
+
+            font-size: 28px;
+        }
+
+        .header p {
+            margin: 8px 0 0;
+
+            color: #6B7F7F;
+
+            font-size: 14px;
+        }
+
+        /* ================================
+           SEARCH CARD
+        ================================= */
+
+        .search-card {
+            background: white;
+
+            padding: 25px;
+
+            border-radius: 14px;
+
+            border: 1px solid #D8E8E7;
+
+            box-shadow:
+                0 4px 15px rgba(7, 63, 63, 0.08);
+
+            margin-bottom: 20px;
+        }
+
+        .search-card h2 {
+            margin: 0 0 18px;
+
+            color: #073F3F;
+
+            font-size: 19px;
+        }
+
+        /* ================================
+           SEARCH FORM
+        ================================= */
+
+        .search-form {
+            display: flex;
+
+            gap: 12px;
+
+            flex-wrap: wrap;
+        }
+
+        .search-form input {
+            flex: 1;
+
+            min-width: 250px;
+
+            padding: 13px 15px;
+
+            border: 1px solid #B7DCDA;
+
+            border-radius: 8px;
+
+            font-size: 14px;
+
+            outline: none;
+
+            color: #263838;
+
+            background: #FAFFFF;
+        }
+
+        .search-form input:focus {
+            border-color: #087F7B;
+
+            box-shadow:
+                0 0 0 3px rgba(8, 127, 123, 0.10);
+        }
+
+        .search-btn {
+            border: none;
+
+            background: #087F7B;
+
+            color: white;
+
+            padding: 13px 22px;
+
+            border-radius: 8px;
+
+            font-size: 14px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        .search-btn:hover {
+            background: #066B68;
+
+            transform: translateY(-1px);
+        }
+
+        /* ================================
+           BACK BUTTON
+        ================================= */
+
+        .back-btn {
+            display: inline-block;
+
+            margin-top: 18px;
+
+            text-decoration: none;
+
+            background: #E8F5F4;
+
+            color: #087F7B;
+
+            border: 1px solid #B7DCDA;
+
+            padding: 10px 16px;
+
+            border-radius: 8px;
+
+            font-size: 13px;
+
+            font-weight: bold;
+
+            transition: 0.2s;
+        }
+
+        .back-btn:hover {
+            background: #D8EEEC;
+
+            color: #073F3F;
+        }
+
+        /* ================================
+           EMPLOYEE DETAILS CARD
+        ================================= */
+
+        .result-card {
+            background: white;
+
+            padding: 22px;
+
+            border-radius: 14px;
+
+            border: 1px solid #D8E8E7;
+
+            box-shadow:
+                0 4px 15px rgba(7, 63, 63, 0.08);
+
+            margin-bottom: 20px;
+        }
+
+        .result-card h2 {
+            margin: 0 0 18px;
+
+            color: #073F3F;
+
+            font-size: 19px;
+        }
+
+        /* ================================
+           TABLE
+        ================================= */
+
+        .table-container {
+            width: 100%;
+
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+
+            min-width: 800px;
+
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #073F3F;
+
+            color: white;
+
+            padding: 13px;
+
+            text-align: left;
+
+            font-size: 12px;
+        }
+
+        td {
+            padding: 13px;
+
+            border-bottom: 1px solid #E1ECEB;
+
+            color: #365555;
+
+            font-size: 12px;
+        }
+
+        tbody tr:hover {
+            background: #F0F9F8;
+        }
+
+        /* ================================
+           EMPLOYEE ID
+        ================================= */
+
+        .employee-id {
+            display: inline-block;
+
+            background: #E8F5F4;
+
+            color: #087F7B;
+
+            padding: 5px 8px;
+
+            border-radius: 6px;
+
+            font-weight: bold;
+
+            font-size: 11px;
+        }
+
+        /* ================================
+           ATTENDANCE SUMMARY
+        ================================= */
+
+        .summary-title {
+            margin-top: 25px;
+
+            margin-bottom: 15px;
+
+            color: #073F3F;
+
+            font-size: 18px;
+        }
+
+        .summary {
+            display: grid;
+
+            grid-template-columns:
+                repeat(auto-fit, minmax(180px, 1fr));
+
+            gap: 15px;
+        }
+
+        .summary-card {
+            background: white;
+
+            border: 1px solid #D8E8E7;
+
+            border-left: 4px solid #087F7B;
+
+            border-radius: 10px;
+
+            padding: 17px;
+
+            box-shadow:
+                0 3px 10px rgba(7, 63, 63, 0.06);
+        }
+
+        .summary-card h3 {
+            margin: 0 0 8px;
+
+            color: #718585;
+
+            font-size: 13px;
+        }
+
+        .summary-number {
+            font-size: 25px;
+
+            font-weight: bold;
+
+            color: #073F3F;
+        }
+
+        /* ================================
+           PRESENT
+        ================================= */
+
+        .present-card {
+            border-left-color: #2E8B57;
+        }
+
+        .present-number {
+            color: #167344;
+        }
+
+        /* ================================
+           ABSENT
+        ================================= */
+
+        .absent-card {
+            border-left-color: #C0392B;
+        }
+
+        .absent-number {
+            color: #B52B2B;
+        }
+
+        /* ================================
+           PERCENTAGE
+        ================================= */
+
+        .percentage-card {
+            border-left-color: #087F7B;
+        }
+
+        .percentage-number {
+            color: #087F7B;
+        }
+
+        /* ================================
+           NO RESULT
+        ================================= */
+
+        .no-result {
+            background: white;
+
+            padding: 40px 20px;
+
+            border-radius: 14px;
+
+            border: 1px solid #D8E8E7;
+
+            box-shadow:
+                0 4px 15px rgba(7, 63, 63, 0.08);
+
+            text-align: center;
+
+            color: #718585;
+
+            font-size: 15px;
+        }
+
+        .no-result-icon {
+            font-size: 40px;
+
+            margin-bottom: 10px;
+        }
+
+        .no-result h3 {
+            margin: 0 0 7px;
+
+            color: #073F3F;
+        }
+
+        .no-result p {
+            margin: 0;
+
+            font-size: 13px;
+        }
+
+        /* ================================
+           FOOTER
+        ================================= */
+
+        .footer {
+            text-align: center;
+
+            color: #789090;
+
+            font-size: 12px;
+
+            margin: 25px 0 15px;
+        }
+
+        /* ================================
+           MOBILE
+        ================================= */
+
+        @media (max-width: 650px) {
+
+            body {
+                padding: 15px;
+            }
+
+            .container {
+                width: 100%;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .search-card,
+            .result-card {
+                padding: 18px;
+            }
+
+            .search-form {
+                flex-direction: column;
+            }
+
+            .search-form input,
+            .search-btn {
+                width: 100%;
+            }
+
+            .summary {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <!-- ================================
+         HEADER
+    ================================= -->
+
+    <div class="header">
+
+        <h1>
+            🔎 Search Employee
+        </h1>
+
+        <p>
+            Find employee details and attendance summary using Employee ID
+        </p>
+
+    </div>
+
+
+    <!-- ================================
+         SEARCH CARD
+    ================================= -->
+
+    <div class="search-card">
+
+        <h2>
+            🔍 Employee Search
+        </h2>
+
+
+        <form
+            method="POST"
+            action="/search_employee"
+            class="search-form"
+        >
+
+            <input
+                type="text"
+                name="employee_id"
+                placeholder="Enter Employee ID"
+                required
+            >
+
+            <button
+                type="submit"
+                class="search-btn"
+            >
+                🔎 Search
+            </button>
+
+        </form>
+
+
+        <a
+            href="/dashboard"
+            class="back-btn"
+        >
+            ← Back to Admin Dashboard
+        </a>
+
+    </div>
+
+
+    <!-- ================================
+         SEARCH RESULTS
+    ================================= -->
+
+    {% if employees %}
+
+
+    <!-- ================================
+         EMPLOYEE DETAILS
+    ================================= -->
+
+    <div class="result-card">
+
+        <h2>
+            👤 Employee Details
+        </h2>
+
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            ID
+                        </th>
+
+                        <th>
+                            Employee ID
+                        </th>
+
+                        <th>
+                            Name
+                        </th>
+
+                        <th>
+                            Email
+                        </th>
+
+                        <th>
+                            Department
+                        </th>
+
+                        <th>
+                            Mobile
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                {% for employee in employees %}
+
+                <tr>
+
+                    <td>
+                        {{ employee[0] }}
+                    </td>
+
+                    <td>
+
+                        <span class="employee-id">
+                            {{ employee[1] }}
+                        </span>
+
+                    </td>
+
+                    <td>
+                        {{ employee[2] }}
+                    </td>
+
+                    <td>
+                        {{ employee[3] or "-" }}
+                    </td>
+
+                    <td>
+                        {{ employee[4] or "-" }}
+                    </td>
+
+                    <td>
+                        {{ employee[5] or "-" }}
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- ================================
+             ATTENDANCE SUMMARY
+        ================================= -->
+
+        <h2 class="summary-title">
+            📊 Attendance Summary
+        </h2>
+
+
+        <div class="summary">
+
+
+            <!-- TOTAL -->
+
+            <div class="summary-card">
+
+                <h3>
+                    Total Attendance
+                </h3>
+
+                <div class="summary-number">
+
+                    {% if attendance_summary %}
+
+                        {{ attendance_summary[0] or 0 }}
+
+                    {% else %}
+
+                        0
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- PRESENT -->
+
+            <div class="summary-card present-card">
+
+                <h3>
+                    Present
+                </h3>
+
+                <div class="summary-number present-number">
+
+                    {% if attendance_summary %}
+
+                        {{ attendance_summary[1] or 0 }}
+
+                    {% else %}
+
+                        0
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- ABSENT -->
+
+            <div class="summary-card absent-card">
+
+                <h3>
+                    Absent
+                </h3>
+
+                <div class="summary-number absent-number">
+
+                    {% if attendance_summary %}
+
+                        {{ attendance_summary[2] or 0 }}
+
+                    {% else %}
+
+                        0
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- ATTENDANCE PERCENTAGE -->
+
+            <div class="summary-card percentage-card">
+
+                <h3>
+                    Attendance Percentage
+                </h3>
+
+                <div class="summary-number percentage-number">
+
+                    {% if attendance_summary and attendance_summary[0] and attendance_summary[0] > 0 %}
+
+                        {{ "%.1f"|format((attendance_summary[1] or 0) * 100 / attendance_summary[0]) }}%
+
+                    {% else %}
+
+                        0%
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+    {% elif request.method == "POST" %}
+
+
+    <!-- ================================
+         NO RESULT
+    ================================= -->
+
+    <div class="no-result">
+
+        <div class="no-result-icon">
+            ❌
+        </div>
+
+        <h3>
+            Employee Not Found
+        </h3>
+
+        <p>
+            No employee found with the entered Employee ID.
+        </p>
+
+    </div>
+
+
+    {% endif %}
+
+
+    <!-- ================================
+         FOOTER
+    ================================= -->
+
+    <div class="footer">
+
+        Employee Attendance Management System
+
+        <br>
+
+        Admin Panel · BCA Project
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>

@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Login - WorkTrack</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+
+            background: #f0fdfa;
+
+            color: #134e4a;
+
+            min-height: 100vh;
+        }
+
+        /* ==============================
+           NAVBAR
+        ============================== */
+
+        .navbar {
+
+            width: 100%;
+
+            min-height: 70px;
+
+            background: #0f766e;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding: 0 30px;
+
+            box-shadow:
+                0 4px 12px
+                rgba(15, 118, 110, 0.25);
+        }
+
+        .logo {
+
+            color: white;
+
+            font-size: 24px;
+
+            font-weight: bold;
+
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 25px;
+        }
+
+        .nav-links a {
+
+            color: white;
+
+            text-decoration: none;
+
+            font-size: 14px;
+
+            font-weight: bold;
+
+            padding: 10px 5px;
+
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+
+            color: #ccfbf1;
+        }
+
+        .home-btn {
+
+            background: #115e59;
+
+            padding: 10px 16px !important;
+
+            border-radius: 7px;
+        }
+
+        .home-btn:hover {
+
+            background: #134e4a;
+
+            color: white !important;
+        }
+
+        /* ==============================
+           MAIN
+        ============================== */
+
+        .main {
+
+            min-height:
+                calc(100vh - 70px);
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            padding: 40px 20px;
+        }
+
+        /* ==============================
+           LOGIN CARD
+        ============================== */
+
+        .login-card {
+
+            width: 100%;
+
+            max-width: 430px;
+
+            background: white;
+
+            padding: 40px;
+
+            border-radius: 18px;
+
+            box-shadow:
+                0 10px 30px
+                rgba(15, 118, 110, 0.15);
+
+            border:
+                1px solid #ccfbf1;
+
+            text-align: center;
+        }
+
+        /* ==============================
+           LOGIN ICON
+        ============================== */
+
+        .login-icon {
+
+            width: 75px;
+
+            height: 75px;
+
+            margin:
+                0 auto 20px;
+
+            background: #ccfbf1;
+
+            border-radius: 50%;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 35px;
+        }
+
+        /* ==============================
+           TITLE
+        ============================== */
+
+        .login-card h1 {
+
+            color: #115e59;
+
+            font-size: 30px;
+
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+
+            color: #6b817f;
+
+            font-size: 14px;
+
+            margin-bottom: 28px;
+        }
+
+        /* ==============================
+           MESSAGE
+        ============================== */
+
+        .message {
+
+            background: #fee2e2;
+
+            color: #991b1b;
+
+            border:
+                1px solid #fecaca;
+
+            padding: 12px;
+
+            border-radius: 8px;
+
+            margin-bottom: 20px;
+
+            font-size: 14px;
+
+            font-weight: bold;
+        }
+
+        .success-message {
+
+            background: #ccfbf1;
+
+            color: #115e59;
+
+            border:
+                1px solid #99f6e4;
+        }
+
+        /* ==============================
+           FORM
+        ============================== */
+
+        .form-group {
+
+            text-align: left;
+
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+
+            display: block;
+
+            margin-bottom: 7px;
+
+            color: #134e4a;
+
+            font-size: 14px;
+
+            font-weight: bold;
+        }
+
+        .input-wrapper {
+
+            position: relative;
+        }
+
+        .input-icon {
+
+            position: absolute;
+
+            left: 13px;
+
+            top: 50%;
+
+            transform:
+                translateY(-50%);
+
+            font-size: 17px;
+        }
+
+        .form-group input {
+
+            width: 100%;
+
+            padding:
+                13px
+                13px
+                13px
+                42px;
+
+            border:
+                1px solid #cbd5d3;
+
+            border-radius: 8px;
+
+            outline: none;
+
+            font-size: 14px;
+
+            color: #134e4a;
+
+            background: white;
+
+            transition: 0.3s;
+        }
+
+        .form-group input:focus {
+
+            border-color: #0f766e;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(15, 118, 110, 0.12);
+        }
+
+        .form-group input::placeholder {
+
+            color: #9aa9a7;
+        }
+
+        /* ==============================
+           LOGIN BUTTON
+        ============================== */
+
+        .login-button {
+
+            width: 100%;
+
+            border: none;
+
+            background: #0f766e;
+
+            color: white;
+
+            padding: 14px;
+
+            border-radius: 8px;
+
+            font-size: 15px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            margin-top: 8px;
+
+            transition: 0.3s;
+
+            box-shadow:
+                0 4px 10px
+                rgba(15, 118, 110, 0.22);
+        }
+
+        .login-button:hover {
+
+            background: #115e59;
+
+            transform:
+                translateY(-2px);
+
+            box-shadow:
+                0 7px 15px
+                rgba(15, 118, 110, 0.28);
+        }
+
+        .login-button:active {
+
+            transform:
+                translateY(0);
+        }
+
+        /* ==============================
+           BACK LINK
+        ============================== */
+
+        .back-link {
+
+            display: inline-block;
+
+            margin-top: 22px;
+
+            color: #0f766e;
+
+            text-decoration: none;
+
+            font-size: 13px;
+
+            font-weight: bold;
+        }
+
+        .back-link:hover {
+
+            color: #115e59;
+
+            text-decoration: underline;
+        }
+
+        /* ==============================
+           FOOTER
+        ============================== */
+
+        .footer {
+
+            margin-top: 25px;
+
+            padding-top: 20px;
+
+            border-top:
+                1px solid #d5eeeb;
+
+            color: #78908d;
+
+            font-size: 12px;
+
+            line-height: 1.6;
+        }
+
+        /* ==============================
+           MOBILE
+        ============================== */
+
+        @media (max-width: 600px) {
+
+            .navbar {
+
+                padding: 0 18px;
+
+                min-height: 65px;
+            }
+
+            .logo {
+
+                font-size: 21px;
+            }
+
+            .nav-links {
+
+                gap: 10px;
+            }
+
+            .nav-links a {
+
+                font-size: 12px;
+            }
+
+            .nav-links a:not(.home-btn) {
+
+                display: none;
+            }
+
+            .main {
+
+                padding: 30px 15px;
+            }
+
+            .login-card {
+
+                padding: 30px 22px;
+            }
+
+            .login-card h1 {
+
+                font-size: 27px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <!-- ==============================
+         NAVBAR
+    ============================== -->
+
+    <nav class="navbar">
+
+        <div class="logo">
+            WorkTrack
+        </div>
+
+        <div class="nav-links">
+
+            <a href="/">
+                Home
+            </a>
+
+            <a href="#">
+                About
+            </a>
+
+            <a href="#">
+                Contact
+            </a>
+
+            <a href="/" class="home-btn">
+                🏠 Home
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <!-- ==============================
+         MAIN LOGIN AREA
+    ============================== -->
+
+    <main class="main">
+
+        <div class="login-card">
+
+            <!-- LOGIN ICON -->
+
+            <div class="login-icon">
+                🔐
+            </div>
+
+
+            <!-- TITLE -->
+
+            <h1>
+                Admin Login
+            </h1>
+
+            <p class="subtitle">
+                Login to manage WorkTrack
+            </p>
+
+
+            <!-- MESSAGE -->
+
+            {% if message %}
+
+                <div class="message">
+                    {{ message }}
+                </div>
+
+            {% endif %}
+
+
+            <!-- LOGIN FORM -->
+
+            <form method="POST"
+                  action="/login">
+
+                <!-- USERNAME -->
+
+                <div class="form-group">
+
+                    <label for="username">
+                        Username
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <span class="input-icon">
+                            👤
+                        </span>
+
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            placeholder="Enter username"
+                            required
+                            autocomplete="username"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- PASSWORD -->
+
+                <div class="form-group">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <span class="input-icon">
+                            🔒
+                        </span>
+
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Enter password"
+                            required
+                            autocomplete="current-password"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- LOGIN BUTTON -->
+
+                <button
+                    type="submit"
+                    class="login-button"
+                >
+                    🔐 Login
+                </button>
+
+            </form>
+
+
+            <!-- BACK TO HOME -->
+
+            <a href="/" class="back-link">
+                ← Back to Home
+            </a>
+
+
+            <!-- FOOTER -->
+
+            <div class="footer">
+
+                <strong>WorkTrack</strong>
+
+                <br>
+
+                Secure Admin Panel
+
+            </div>
+
+        </div>
+
+    </main>
+
+</body>
+
+</html>
