@@ -9,13 +9,22 @@ app = Flask(__name__)
 # FLASK SECRET KEY
 # =========================================================
 
-app.secret_key = "employee_management_secret_key"
+app.secret_key = os.environ.get(
+    "SECRET_KEY",
+    "employee_management_secret_key"
+)
 
 # =========================================================
-# DATABASE NAME
+# POSTGRESQL DATABASE
 # =========================================================
 
-DB_NAME = "employee.db"
+DATABASE_URL = os.environ.get("DATABASE_URL")
+
+
+def get_db_connection():
+    if not DATABASE_URL:
+        raise RuntimeError("DATABASE_URL environment variable is not set.")
+    return psycopg2.connect(DATABASE_URL)
 
 
 # =========================================================
@@ -24,7 +33,7 @@ DB_NAME = "employee.db"
 
 def create_tables():
 
-    conn = sqlite3.connect(DB_NAME)
+    conn = get_db_connection()
     cur = conn.cursor()
 
     # -----------------------------------------------------
@@ -33,7 +42,7 @@ def create_tables():
 
     cur.execute("""
         CREATE TABLE IF NOT EXISTS employee (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id SERIAL PRIMARY KEY,
             employee_id TEXT UNIQUE NOT NULL,
             name TEXT NOT NULL,
             email TEXT,
@@ -48,10 +57,13 @@ def create_tables():
 
     cur.execute("""
         CREATE TABLE IF NOT EXISTS attendance (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id SERIAL PRIMARY KEY,
             employee_id TEXT NOT NULL,
             date TEXT NOT NULL,
-            status TEXT NOT NULL
+            status TEXT NOT NULL,
+            check_in TEXT,
+            check_out TEXT,
+            attendance_type TEXT
         )
     """)
 
@@ -61,7 +73,7 @@ def create_tables():
 
     cur.execute("""
         CREATE TABLE IF NOT EXISTS leave_request (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id SERIAL PRIMARY KEY,
             employee_id TEXT NOT NULL,
             leave_date TEXT NOT NULL,
             reason TEXT,
@@ -70,39 +82,31 @@ def create_tables():
     """)
 
     # -----------------------------------------------------
-    # CHECK ATTENDANCE COLUMNS
+    # ADD MISSING ATTENDANCE COLUMNS
     # -----------------------------------------------------
 
-    existing_columns = [
-        row[1]
-        for row in cur.execute(
-            "PRAGMA table_info(attendance)"
-        ).fetchall()
-    ]
+    cur.execute("""
+        ALTER TABLE attendance
+        ADD COLUMN IF NOT EXISTS check_in TEXT
+    """)
 
-    if "check_in" not in existing_columns:
-        cur.execute("""
-            ALTER TABLE attendance
-            ADD COLUMN check_in TEXT
-        """)
+    cur.execute("""
+        ALTER TABLE attendance
+        ADD COLUMN IF NOT EXISTS check_out TEXT
+    """)
 
-    if "check_out" not in existing_columns:
-        cur.execute("""
-            ALTER TABLE attendance
-            ADD COLUMN check_out TEXT
-        """)
-
-    if "attendance_type" not in existing_columns:
-        cur.execute("""
-            ALTER TABLE attendance
-            ADD COLUMN attendance_type TEXT
-        """)
+    cur.execute("""
+        ALTER TABLE attendance
+        ADD COLUMN IF NOT EXISTS attendance_type TEXT
+    """)
 
     conn.commit()
+
+    cur.close()
     conn.close()
 
 
-# Create tables
+# Create database tables
 create_tables()
 
 
@@ -210,17 +214,15 @@ def login():
 
             return redirect("/dashboard")
 
-        else:
+        return """
+        <h2 style='color:red;text-align:center;'>
+            Invalid Username or Password
+        </h2>
 
-            return """
-            <h2 style='color:red;text-align:center;'>
-                Invalid Username or Password
-            </h2>
-
-            <center>
-                <a href='/login'>Try Again</a>
-            </center>
-            """
+        <center>
+            <a href='/login'>Try Again</a>
+        </center>
+        """
 
     return render_template(
         "login.html"
@@ -247,7 +249,7 @@ def employee_login():
             "password"
         ].strip()
 
-        conn = sqlite3.connect(DB_NAME)
+        conn = get_db_connection()
         cur = conn.cursor()
 
         cur.execute("""
@@ -255,13 +257,14 @@ def employee_login():
                 employee_id,
                 name
             FROM employee
-            WHERE employee_id=?
+            WHERE employee_id=%s
         """, (
             employee_id,
         ))
 
         employee = cur.fetchone()
 
+        cur.close()
         conn.close()
 
         # Employee password = 1234
@@ -334,7 +337,7 @@ def employee_dashboard():
         ""
     )
 
-    conn = sqlite3.connect(DB_NAME)
+    conn = get_db_connection()
     cur = conn.cursor()
 
     # -----------------------------------------------------
@@ -349,7 +352,7 @@ def employee_dashboard():
             department,
             mobile
         FROM employee
-        WHERE employee_id=?
+        WHERE employee_id=%s
     """, (
         employee_id,
     ))
@@ -371,7 +374,7 @@ def employee_dashboard():
     cur.execute("""
         SELECT COUNT(*)
         FROM attendance
-        WHERE employee_id=?
+        WHERE employee_id=%s
     """, (
         employee_id,
     ))
@@ -385,7 +388,7 @@ def employee_dashboard():
     cur.execute("""
         SELECT COUNT(*)
         FROM attendance
-        WHERE employee_id=?
+        WHERE employee_id=%s
         AND status='Present'
     """, (
         employee_id,
@@ -400,7 +403,7 @@ def employee_dashboard():
     cur.execute("""
         SELECT COUNT(*)
         FROM attendance
-        WHERE employee_id=?
+        WHERE employee_id=%s
         AND status='Absent'
     """, (
         employee_id,
@@ -415,7 +418,7 @@ def employee_dashboard():
     cur.execute("""
         SELECT COUNT(*)
         FROM leave_request
-        WHERE employee_id=?
+        WHERE employee_id=%s
         AND status='Pending'
     """, (
         employee_id,
@@ -430,7 +433,7 @@ def employee_dashboard():
     cur.execute("""
         SELECT COUNT(*)
         FROM leave_request
-        WHERE employee_id=?
+        WHERE employee_id=%s
         AND status='Approved'
     """, (
         employee_id,
@@ -445,7 +448,7 @@ def employee_dashboard():
     cur.execute("""
         SELECT COUNT(*)
         FROM leave_request
-        WHERE employee_id=?
+        WHERE employee_id=%s
         AND status='Rejected'
     """, (
         employee_id,
@@ -466,8 +469,8 @@ def employee_dashboard():
             check_out,
             attendance_type
         FROM attendance
-        WHERE employee_id=?
-        AND date=?
+        WHERE employee_id=%s
+        AND date=%s
         ORDER BY id DESC
         LIMIT 1
     """, (
@@ -496,7 +499,7 @@ def employee_dashboard():
             check_out,
             attendance_type
         FROM attendance
-        WHERE employee_id=?
+        WHERE employee_id=%s
         ORDER BY date DESC, id DESC
     """, (
         employee_id,
@@ -538,7 +541,7 @@ def employee_dashboard():
             reason,
             status
         FROM leave_request
-        WHERE employee_id=?
+        WHERE employee_id=%s
         ORDER BY leave_date DESC
     """, (
         employee_id,
@@ -557,6 +560,7 @@ def employee_dashboard():
             2
         )
 
+    cur.close()
     conn.close()
 
     return render_template(
@@ -630,7 +634,7 @@ def employee_check_in():
         "%I:%M %p"
     )
 
-    conn = sqlite3.connect(DB_NAME)
+    conn = get_db_connection()
     cur = conn.cursor()
 
     # -----------------------------------------------------
@@ -644,8 +648,8 @@ def employee_check_in():
             check_out,
             attendance_type
         FROM attendance
-        WHERE employee_id=?
-        AND date=?
+        WHERE employee_id=%s
+        AND date=%s
         ORDER BY id DESC
         LIMIT 1
     """, (
@@ -657,6 +661,7 @@ def employee_check_in():
 
     if existing:
 
+        cur.close()
         conn.close()
 
         return redirect(
@@ -680,12 +685,12 @@ def employee_check_in():
         )
         VALUES
         (
-            ?,
-            ?,
+            %s,
+            %s,
             'Present',
-            ?,
+            %s,
             NULL,
-            ?
+            %s
         )
     """, (
         employee_id,
@@ -695,6 +700,8 @@ def employee_check_in():
     ))
 
     conn.commit()
+
+    cur.close()
     conn.close()
 
     return redirect(
@@ -729,7 +736,7 @@ def employee_check_out():
         "%I:%M %p"
     )
 
-    conn = sqlite3.connect(DB_NAME)
+    conn = get_db_connection()
     cur = conn.cursor()
 
     cur.execute("""
@@ -738,8 +745,8 @@ def employee_check_out():
             check_in,
             check_out
         FROM attendance
-        WHERE employee_id=?
-        AND date=?
+        WHERE employee_id=%s
+        AND date=%s
         ORDER BY id DESC
         LIMIT 1
     """, (
@@ -751,6 +758,7 @@ def employee_check_out():
 
     if not record:
 
+        cur.close()
         conn.close()
 
         return redirect(
@@ -763,6 +771,7 @@ def employee_check_out():
 
     if check_out:
 
+        cur.close()
         conn.close()
 
         return redirect(
@@ -772,14 +781,16 @@ def employee_check_out():
 
     cur.execute("""
         UPDATE attendance
-        SET check_out=?
-        WHERE id=?
+        SET check_out=%s
+        WHERE id=%s
     """, (
         current_time,
         attendance_id
     ))
 
     conn.commit()
+
+    cur.close()
     conn.close()
 
     return redirect(
@@ -816,7 +827,7 @@ def apply_leave():
             "reason"
         ].strip()
 
-        conn = sqlite3.connect(DB_NAME)
+        conn = get_db_connection()
         cur = conn.cursor()
 
         cur.execute("""
@@ -829,9 +840,9 @@ def apply_leave():
             )
             VALUES
             (
-                ?,
-                ?,
-                ?,
+                %s,
+                %s,
+                %s,
                 'Pending'
             )
         """, (
@@ -841,6 +852,8 @@ def apply_leave():
         ))
 
         conn.commit()
+
+        cur.close()
         conn.close()
 
         return redirect(
@@ -864,7 +877,7 @@ def dashboard():
 
         return redirect("/login")
 
-    conn = sqlite3.connect(DB_NAME)
+    conn = get_db_connection()
     cur = conn.cursor()
 
     cur.execute("""
@@ -897,6 +910,7 @@ def dashboard():
 
     absent_count = cur.fetchone()[0]
 
+    cur.close()
     conn.close()
 
     return render_template(
@@ -919,7 +933,7 @@ def leave_requests():
 
         return redirect("/login")
 
-    conn = sqlite3.connect(DB_NAME)
+    conn = get_db_connection()
     cur = conn.cursor()
 
     cur.execute("""
@@ -941,6 +955,7 @@ def leave_requests():
 
     requests = cur.fetchall()
 
+    cur.close()
     conn.close()
 
     return render_template(
@@ -963,18 +978,20 @@ def approve_leave(id):
 
         return redirect("/login")
 
-    conn = sqlite3.connect(DB_NAME)
+    conn = get_db_connection()
     cur = conn.cursor()
 
     cur.execute("""
         UPDATE leave_request
         SET status='Approved'
-        WHERE id=?
+        WHERE id=%s
     """, (
         id,
     ))
 
     conn.commit()
+
+    cur.close()
     conn.close()
 
     return redirect(
@@ -996,18 +1013,20 @@ def reject_leave(id):
 
         return redirect("/login")
 
-    conn = sqlite3.connect(DB_NAME)
+    conn = get_db_connection()
     cur = conn.cursor()
 
     cur.execute("""
         UPDATE leave_request
         SET status='Rejected'
-        WHERE id=?
+        WHERE id=%s
     """, (
         id,
     ))
 
     conn.commit()
+
+    cur.close()
     conn.close()
 
     return redirect(
@@ -1051,7 +1070,7 @@ def add_employee():
             "mobile"
         ].strip()
 
-        conn = sqlite3.connect(DB_NAME)
+        conn = get_db_connection()
         cur = conn.cursor()
 
         try:
@@ -1067,11 +1086,11 @@ def add_employee():
                 )
                 VALUES
                 (
-                    ?,
-                    ?,
-                    ?,
-                    ?,
-                    ?
+                    %s,
+                    %s,
+                    %s,
+                    %s,
+                    %s
                 )
             """, (
                 employee_id,
@@ -1083,8 +1102,11 @@ def add_employee():
 
             conn.commit()
 
-        except sqlite3.IntegrityError:
+        except psycopg2.IntegrityError:
 
+            conn.rollback()
+
+            cur.close()
             conn.close()
 
             return """
@@ -1099,6 +1121,7 @@ def add_employee():
             </center>
             """
 
+        cur.close()
         conn.close()
 
         return redirect(
@@ -1121,7 +1144,7 @@ def view_employees():
 
         return redirect("/login")
 
-    conn = sqlite3.connect(DB_NAME)
+    conn = get_db_connection()
     cur = conn.cursor()
 
     cur.execute("""
@@ -1138,6 +1161,7 @@ def view_employees():
 
     employees = cur.fetchall()
 
+    cur.close()
     conn.close()
 
     return render_template(
@@ -1160,7 +1184,7 @@ def edit_employee(id):
 
         return redirect("/login")
 
-    conn = sqlite3.connect(DB_NAME)
+    conn = get_db_connection()
     cur = conn.cursor()
 
     if request.method == "POST":
@@ -1190,12 +1214,12 @@ def edit_employee(id):
             cur.execute("""
                 UPDATE employee
                 SET
-                    employee_id=?,
-                    name=?,
-                    email=?,
-                    department=?,
-                    mobile=?
-                WHERE id=?
+                    employee_id=%s,
+                    name=%s,
+                    email=%s,
+                    department=%s,
+                    mobile=%s
+                WHERE id=%s
             """, (
                 employee_id,
                 name,
@@ -1207,8 +1231,11 @@ def edit_employee(id):
 
             conn.commit()
 
-        except sqlite3.IntegrityError:
+        except psycopg2.IntegrityError:
 
+            conn.rollback()
+
+            cur.close()
             conn.close()
 
             return """
@@ -1223,6 +1250,7 @@ def edit_employee(id):
             </center>
             """
 
+        cur.close()
         conn.close()
 
         return redirect(
@@ -1238,13 +1266,14 @@ def edit_employee(id):
             department,
             mobile
         FROM employee
-        WHERE id=?
+        WHERE id=%s
     """, (
         id,
     ))
 
     employee = cur.fetchone()
 
+    cur.close()
     conn.close()
 
     if not employee:
@@ -1271,7 +1300,7 @@ def mark_attendance():
 
         return redirect("/login")
 
-    conn = sqlite3.connect(DB_NAME)
+    conn = get_db_connection()
     cur = conn.cursor()
 
     if request.method == "POST":
@@ -1295,8 +1324,8 @@ def mark_attendance():
         cur.execute("""
             SELECT id
             FROM attendance
-            WHERE employee_id=?
-            AND date=?
+            WHERE employee_id=%s
+            AND date=%s
         """, (
             employee_id,
             attendance_date
@@ -1306,6 +1335,7 @@ def mark_attendance():
 
         if existing:
 
+            cur.close()
             conn.close()
 
             return """
@@ -1333,9 +1363,9 @@ def mark_attendance():
             )
             VALUES
             (
-                ?,
-                ?,
-                ?
+                %s,
+                %s,
+                %s
             )
         """, (
             employee_id,
@@ -1344,6 +1374,8 @@ def mark_attendance():
         ))
 
         conn.commit()
+
+        cur.close()
         conn.close()
 
         return redirect(
@@ -1368,6 +1400,7 @@ def mark_attendance():
 
     employees = cur.fetchall()
 
+    cur.close()
     conn.close()
 
     return render_template(
@@ -1387,7 +1420,7 @@ def attendance_report():
 
         return redirect("/login")
 
-    conn = sqlite3.connect(DB_NAME)
+    conn = get_db_connection()
     cur = conn.cursor()
 
     cur.execute("""
@@ -1427,6 +1460,7 @@ def attendance_report():
             )
         )
 
+    cur.close()
     conn.close()
 
     return render_template(
@@ -1449,7 +1483,7 @@ def edit_attendance(id):
 
         return redirect("/login")
 
-    conn = sqlite3.connect(DB_NAME)
+    conn = get_db_connection()
     cur = conn.cursor()
 
     # -----------------------------------------------------
@@ -1488,13 +1522,13 @@ def edit_attendance(id):
         cur.execute("""
             UPDATE attendance
             SET
-                employee_id=?,
-                date=?,
-                status=?,
-                check_in=?,
-                check_out=?,
-                attendance_type=?
-            WHERE id=?
+                employee_id=%s,
+                date=%s,
+                status=%s,
+                check_in=%s,
+                check_out=%s,
+                attendance_type=%s
+            WHERE id=%s
         """, (
             employee_id,
             attendance_date,
@@ -1506,6 +1540,8 @@ def edit_attendance(id):
         ))
 
         conn.commit()
+
+        cur.close()
         conn.close()
 
         return redirect(
@@ -1526,7 +1562,7 @@ def edit_attendance(id):
             check_out,
             attendance_type
         FROM attendance
-        WHERE id=?
+        WHERE id=%s
     """, (
         id,
     ))
@@ -1534,7 +1570,7 @@ def edit_attendance(id):
     attendance = cur.fetchone()
 
     # -----------------------------------------------------
-    # GET EMPLOYEES FOR DROPDOWN
+    # GET EMPLOYEES
     # -----------------------------------------------------
 
     cur.execute("""
@@ -1547,6 +1583,7 @@ def edit_attendance(id):
 
     employees = cur.fetchall()
 
+    cur.close()
     conn.close()
 
     if not attendance:
@@ -1576,7 +1613,7 @@ def monthly_attendance_report():
         datetime.now().strftime("%Y-%m")
     )
 
-    conn = sqlite3.connect(DB_NAME)
+    conn = get_db_connection()
     cur = conn.cursor()
 
     # -----------------------------------------------------
@@ -1614,11 +1651,7 @@ def monthly_attendance_report():
         ON employee.employee_id =
            attendance.employee_id
 
-        AND substr(
-            attendance.date,
-            1,
-            7
-        ) = ?
+        AND LEFT(attendance.date, 7) = %s
 
         GROUP BY
             employee.employee_id,
@@ -1690,11 +1723,7 @@ def monthly_attendance_report():
         ON attendance.employee_id =
            employee.employee_id
 
-        WHERE substr(
-            attendance.date,
-            1,
-            7
-        ) = ?
+        WHERE LEFT(attendance.date, 7) = %s
 
         ORDER BY
             attendance.date DESC,
@@ -1706,6 +1735,7 @@ def monthly_attendance_report():
 
     attendance = cur.fetchall()
 
+    cur.close()
     conn.close()
 
     return render_template(
@@ -1738,7 +1768,7 @@ def search_employee():
             "employee_id"
         ].strip()
 
-        conn = sqlite3.connect(DB_NAME)
+        conn = get_db_connection()
         cur = conn.cursor()
 
         cur.execute("""
@@ -1749,17 +1779,15 @@ def search_employee():
                 email,
                 department,
                 mobile
-
             FROM employee
-
-            WHERE employee_id=?
-
+            WHERE employee_id=%s
         """, (
             employee_id,
         ))
 
         employees = cur.fetchall()
 
+        cur.close()
         conn.close()
 
     return render_template(
@@ -1781,7 +1809,7 @@ def delete_employee(id):
 
         return redirect("/login")
 
-    conn = sqlite3.connect(DB_NAME)
+    conn = get_db_connection()
     cur = conn.cursor()
 
     # -----------------------------------------------------
@@ -1791,7 +1819,7 @@ def delete_employee(id):
     cur.execute("""
         SELECT employee_id
         FROM employee
-        WHERE id=?
+        WHERE id=%s
     """, (
         id,
     ))
@@ -1806,7 +1834,7 @@ def delete_employee(id):
 
         cur.execute("""
             DELETE FROM attendance
-            WHERE employee_id=?
+            WHERE employee_id=%s
         """, (
             employee_id,
         ))
@@ -1815,7 +1843,7 @@ def delete_employee(id):
 
         cur.execute("""
             DELETE FROM leave_request
-            WHERE employee_id=?
+            WHERE employee_id=%s
         """, (
             employee_id,
         ))
@@ -1826,12 +1854,14 @@ def delete_employee(id):
 
     cur.execute("""
         DELETE FROM employee
-        WHERE id=?
+        WHERE id=%s
     """, (
         id,
     ))
 
     conn.commit()
+
+    cur.close()
     conn.close()
 
     return redirect(
@@ -1868,5 +1898,12 @@ def logout():
 if __name__ == "__main__":
 
     app.run(
-        debug=True
+        host="0.0.0.0",
+        port=int(
+            os.environ.get(
+                "PORT",
+                5000
+            )
+        ),
+        debug=False
     )
